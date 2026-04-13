@@ -7,1189 +7,847 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
-
   <style>
     :root {
-      --stone:    #f5f0e8;
-      --warm:     #ede5d5;
-      --sand:     #d4c5a9;
-      --clay:     #b39c7d;
-      --bark:     #7a6148;
-      --earth:    #4a3728;
-      --charcoal: #1e1712;
-      --gold:     #c9a96e;
-      --gold-lt:  #e8d5b0;
-      --white:    #fdfaf5;
-      --ff-display: 'Cormorant Garamond', Georgia, serif;
-      --ff-body:    'Jost', sans-serif;
+      --stone:#f5f0e8;--warm:#ede5d5;--sand:#d4c5a9;--clay:#b39c7d;
+      --bark:#7a6148;--earth:#4a3728;--charcoal:#1e1712;
+      --gold:#c9a96e;--gold-lt:#e8d5b0;--white:#fdfaf5;
+      --ff-display:'Cormorant Garamond',Georgia,serif;
+      --ff-body:'Jost',sans-serif;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{background:var(--stone);color:var(--earth);font-family:var(--ff-body);font-weight:300;overflow-x:hidden}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:1.4rem 3rem;transition:background .4s,box-shadow .4s}
+    nav.scrolled{background:rgba(245,240,232,.94);backdrop-filter:blur(14px);box-shadow:0 1px 0 rgba(74,55,40,.1)}
+    .nav-logo{font-family:var(--ff-display);font-size:1.5rem;font-weight:400;color:var(--white);letter-spacing:.04em;text-decoration:none;transition:color .4s}
+    nav.scrolled .nav-logo{color:var(--earth)}
+    .nav-links{display:flex;gap:2.5rem;list-style:none}
+    .nav-links a{font-size:.78rem;font-weight:400;letter-spacing:.14em;text-transform:uppercase;color:rgba(253,250,245,.85);text-decoration:none;transition:color .3s}
+    nav.scrolled .nav-links a{color:var(--bark)}
+    .nav-links a:hover{color:var(--gold)}
+    .nav-cta{font-size:.75rem;font-weight:400;letter-spacing:.12em;text-transform:uppercase;color:var(--earth);background:var(--gold);padding:.55rem 1.4rem;text-decoration:none;transition:background .3s}
+    .nav-cta:hover{background:var(--clay)}
+
+    /* LOADER */
+    #loader{position:fixed;inset:0;background:var(--earth);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.4rem;transition:opacity .7s,visibility .7s}
+    #loader.hidden{opacity:0;visibility:hidden}
+    .loader-logo{font-family:var(--ff-display);font-size:1.8rem;font-weight:300;color:var(--white);letter-spacing:.06em}
+    .loader-bar-wrap{width:200px;height:1px;background:rgba(212,197,169,.2)}
+    .loader-bar{height:100%;background:var(--gold);width:0%;transition:width .1s linear}
+    .loader-pct{font-size:.68rem;letter-spacing:.2em;color:var(--clay)}
+
+    /* HERO SCROLL WRAP */
+    .hero-wrap{position:relative;height:700vh}
+    .hero-sticky{position:sticky;top:0;height:100vh;overflow:hidden}
+    #hero-canvas{position:absolute;inset:0;width:100%;height:100%}
+    .hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(30,23,18,.38) 0%,rgba(30,23,18,.08) 50%,rgba(30,23,18,.6) 100%)}
+
+    /* HERO TEXT */
+    .hero-content{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;transition:opacity .25s,transform .25s}
+    .hero-eyebrow{font-size:.72rem;font-weight:400;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-lt);margin-bottom:1.4rem;opacity:0;transform:translateY(16px);animation:fadeUp .9s .3s forwards}
+    .hero-title{font-family:var(--ff-display);font-size:clamp(3rem,7vw,6.5rem);font-weight:300;line-height:1.06;color:var(--white);margin-bottom:1.6rem;opacity:0;transform:translateY(20px);animation:fadeUp 1s .55s forwards}
+    .hero-title em{font-style:italic;color:var(--gold-lt)}
+    .hero-sub{font-size:1rem;font-weight:300;letter-spacing:.06em;color:rgba(253,250,245,.8);max-width:480px;line-height:1.7;margin-bottom:2.5rem;opacity:0;transform:translateY(16px);animation:fadeUp 1s .8s forwards}
+    .hero-btns{display:flex;gap:1rem;opacity:0;transform:translateY(14px);animation:fadeUp 1s 1s forwards}
+    .btn-primary{font-size:.75rem;font-weight:400;letter-spacing:.14em;text-transform:uppercase;color:var(--earth);background:var(--gold);padding:.9rem 2.2rem;text-decoration:none;transition:background .3s,transform .2s;font-family:var(--ff-body)}
+    .btn-primary:hover{background:var(--gold-lt);transform:translateY(-2px)}
+    .btn-ghost{font-size:.75rem;font-weight:400;letter-spacing:.14em;text-transform:uppercase;color:var(--white);background:transparent;border:1px solid rgba(253,250,245,.45);padding:.9rem 2.2rem;text-decoration:none;transition:border-color .3s,background .3s;font-family:var(--ff-body)}
+    .btn-ghost:hover{border-color:var(--gold);background:rgba(201,169,110,.12)}
+    .hero-scroll-hint{position:absolute;bottom:2.2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;opacity:0;animation:fadeUp 1s 1.5s forwards;z-index:10}
+    .hero-scroll-hint span{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(253,250,245,.55)}
+    .scroll-line{width:1px;height:48px;background:linear-gradient(to bottom,rgba(253,250,245,.55),transparent);animation:scrollPulse 2s ease-in-out infinite}
+
+    /* ── TRUST BURST SECTION ── */
+    .trust-burst-wrap{position:relative;height:180vh;background:var(--charcoal)}
+    .trust-burst-sticky{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center}
+    .trust-burst-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,rgba(201,169,110,.07) 0%,transparent 65%)}
+
+    /* trust icons container — starts collapsed at bottom center */
+    .trust-icons-row{
+      position:absolute;
+      bottom:14vh;
+      left:50%;
+      transform:translateX(-50%);
+      display:flex;
+      gap:0;
+      align-items:flex-end;
+      z-index:10;
+    }
+    .trust-icon-pill{
+      display:flex;flex-direction:column;align-items:center;gap:.9rem;
+      opacity:0;
+      transform:translateY(80px) scale(.6);
+      transition:opacity .55s cubic-bezier(.22,1,.36,1), transform .55s cubic-bezier(.22,1,.36,1), gap .6s ease;
+      width:0;overflow:hidden;
+      pointer-events:none;
+    }
+    .trust-icon-pill.spread{
+      opacity:1;transform:translateY(0) scale(1);
+      width:160px;pointer-events:auto;
+    }
+    .trust-icon-pill.spread:nth-child(1){transition-delay:.05s;transform:translateY(0) scale(1) translateX(-12px)}
+    .trust-icon-pill.spread:nth-child(2){transition-delay:.15s}
+    .trust-icon-pill.spread:nth-child(3){transition-delay:.25s}
+    .trust-icon-pill.spread:nth-child(4){transition-delay:.35s;transform:translateY(0) scale(1) translateX(12px)}
+
+    .trust-icon-circle{
+      width:88px;height:88px;border-radius:50%;
+      border:1px solid rgba(201,169,110,.35);
+      background:rgba(201,169,110,.06);
+      display:flex;align-items:center;justify-content:center;
+      position:relative;
+      transition:border-color .3s,background .3s,transform .3s,box-shadow .3s;
+      cursor:default;
+    }
+    .trust-icon-circle::before{
+      content:'';position:absolute;inset:-6px;border-radius:50%;
+      border:1px solid rgba(201,169,110,0);
+      transition:border-color .4s,inset .4s;
+    }
+    .trust-icon-pill:hover .trust-icon-circle{
+      background:rgba(201,169,110,.15);
+      border-color:var(--gold);
+      transform:translateY(-6px) scale(1.06);
+      box-shadow:0 12px 40px rgba(201,169,110,.2);
+    }
+    .trust-icon-pill:hover .trust-icon-circle::before{
+      border-color:rgba(201,169,110,.25);inset:-12px;
+    }
+    .trust-icon-circle svg{width:34px;height:34px;stroke:var(--gold);stroke-width:1.3;fill:none}
+    .trust-icon-label{
+      font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;
+      color:var(--sand);text-align:center;line-height:1.5;
+      transition:color .3s;
+      width:120px;
+    }
+    .trust-icon-pill:hover .trust-icon-label{color:var(--gold-lt)}
+
+    /* trust headline */
+    .trust-headline{
+      position:absolute;top:50%;left:50%;
+      transform:translate(-50%,-50%);
+      text-align:center;
+      opacity:0;transition:opacity .7s .2s;
+      pointer-events:none;
+    }
+    .trust-headline.show{opacity:1}
+    .trust-headline h2{font-family:var(--ff-display);font-size:clamp(2.4rem,5vw,4.5rem);font-weight:300;color:var(--white);line-height:1.1;margin-bottom:.8rem}
+    .trust-headline h2 em{font-style:italic;color:var(--gold-lt)}
+    .trust-headline p{font-size:.85rem;letter-spacing:.08em;color:var(--sand)}
+
+    /* ── COLLECTIONS SECTION ── */
+    .collections-wrap{position:relative;height:300vh;background:var(--charcoal)}
+    .collections-sticky{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem 4rem}
+    .collections-header{text-align:center;margin-bottom:2.5rem;opacity:0;transform:translateY(24px);transition:opacity .7s,transform .7s}
+    .collections-header.show{opacity:1;transform:translateY(0)}
+    .collections-eyebrow{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:.7rem}
+    .collections-title{font-family:var(--ff-display);font-size:clamp(1.8rem,3.5vw,3rem);font-weight:300;color:var(--white);line-height:1.1}
+    .collections-title em{font-style:italic;color:var(--gold-lt)}
+
+    /* 3×4 grid — 3 cols, 4 rows, fits one screen */
+    .coll-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      grid-template-rows:repeat(4,1fr);
+      gap:1rem;
+      width:100%;
+      max-width:1100px;
+      height:calc(100vh - 200px);
+      max-height:580px;
+    }
+    .coll-card{
+      position:relative;overflow:hidden;cursor:pointer;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(201,169,110,.12);
+      opacity:0;
+      transform:translateY(40px) scale(.96);
+      transition:
+        opacity .6s cubic-bezier(.22,1,.36,1),
+        transform .6s cubic-bezier(.22,1,.36,1),
+        border-color .3s,
+        box-shadow .4s;
+    }
+    .coll-card.pop{opacity:1;transform:translateY(0) scale(1)}
+    /* staggered delays */
+    .coll-card:nth-child(1){transition-delay:.00s}
+    .coll-card:nth-child(2){transition-delay:.07s}
+    .coll-card:nth-child(3){transition-delay:.14s}
+    .coll-card:nth-child(4){transition-delay:.21s}
+    .coll-card:nth-child(5){transition-delay:.28s}
+    .coll-card:nth-child(6){transition-delay:.35s}
+    .coll-card:nth-child(7){transition-delay:.42s}
+    .coll-card:nth-child(8){transition-delay:.49s}
+    .coll-card:nth-child(9){transition-delay:.56s}
+    .coll-card:nth-child(10){transition-delay:.63s}
+    .coll-card:nth-child(11){transition-delay:.70s}
+    .coll-card:nth-child(12){transition-delay:.77s}
+
+    /* hover glow border */
+    .coll-card:hover{
+      border-color:rgba(201,169,110,.55);
+      box-shadow:0 0 0 1px rgba(201,169,110,.2),0 16px 48px rgba(0,0,0,.4),inset 0 0 40px rgba(201,169,110,.04);
+      z-index:2;
     }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* inner shimmer on hover */
+    .coll-card::before{
+      content:'';position:absolute;inset:0;
+      background:linear-gradient(135deg,rgba(201,169,110,0) 40%,rgba(201,169,110,.08) 100%);
+      opacity:0;transition:opacity .4s;z-index:1;
+    }
+    .coll-card:hover::before{opacity:1}
 
-    html { scroll-behavior: smooth; }
+    /* moving shine sweep */
+    .coll-card::after{
+      content:'';position:absolute;top:-100%;left:-60%;
+      width:40%;height:300%;
+      background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.06) 50%,transparent 60%);
+      transform:skewX(-15deg);
+      transition:left .6s ease,top .6s ease;
+      z-index:2;pointer-events:none;
+    }
+    .coll-card:hover::after{left:140%;top:-100%}
 
-    body {
-      background: var(--stone);
-      color: var(--earth);
-      font-family: var(--ff-body);
-      font-weight: 300;
-      overflow-x: hidden;
+    .coll-bg{
+      position:absolute;inset:0;
+      display:flex;align-items:center;justify-content:center;
+      transition:transform .5s cubic-bezier(.22,1,.36,1);
     }
+    .coll-card:hover .coll-bg{transform:scale(1.06)}
 
-    /* ── NAV ── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1.4rem 3rem;
-      transition: background 0.4s, box-shadow 0.4s;
-    }
-    nav.scrolled {
-      background: rgba(245,240,232,0.92);
-      backdrop-filter: blur(12px);
-      box-shadow: 0 1px 0 rgba(74,55,40,0.1);
-    }
-    .nav-logo {
-      font-family: var(--ff-display);
-      font-size: 1.5rem;
-      font-weight: 400;
-      color: var(--white);
-      letter-spacing: 0.04em;
-      text-decoration: none;
-      transition: color 0.4s;
-    }
-    nav.scrolled .nav-logo { color: var(--earth); }
-    .nav-links {
-      display: flex;
-      gap: 2.5rem;
-      list-style: none;
-    }
-    .nav-links a {
-      font-family: var(--ff-body);
-      font-size: 0.78rem;
-      font-weight: 400;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: rgba(253,250,245,0.85);
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-    nav.scrolled .nav-links a { color: var(--bark); }
-    .nav-links a:hover { color: var(--gold); }
-    .nav-cta {
-      font-family: var(--ff-body);
-      font-size: 0.75rem;
-      font-weight: 400;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--earth);
-      background: var(--gold);
-      padding: 0.55rem 1.4rem;
-      text-decoration: none;
-      transition: background 0.3s;
-    }
-    .nav-cta:hover { background: var(--clay); }
+    /* color-coded category backgrounds */
+    .coll-card:nth-child(1) .coll-bg{background:linear-gradient(135deg,#3a2e24 0%,#5a4535 100%)}
+    .coll-card:nth-child(2) .coll-bg{background:linear-gradient(135deg,#2e2a20 0%,#4a4030 100%)}
+    .coll-card:nth-child(3) .coll-bg{background:linear-gradient(135deg,#332820 0%,#4e3828 100%)}
+    .coll-card:nth-child(4) .coll-bg{background:linear-gradient(135deg,#26201a 0%,#3e3028 100%)}
+    .coll-card:nth-child(5) .coll-bg{background:linear-gradient(135deg,#2a2820 0%,#443e2c 100%)}
+    .coll-card:nth-child(6) .coll-bg{background:linear-gradient(135deg,#1e2224 0%,#303840 100%)}
+    .coll-card:nth-child(7) .coll-bg{background:linear-gradient(135deg,#221e28 0%,#38303e 100%)}
+    .coll-card:nth-child(8) .coll-bg{background:linear-gradient(135deg,#1e2820 0%,#2e3e30 100%)}
+    .coll-card:nth-child(9) .coll-bg{background:linear-gradient(135deg,#28201e 0%,#40302e 100%)}
+    .coll-card:nth-child(10) .coll-bg{background:linear-gradient(135deg,#201e28 0%,#302e40 100%)}
+    .coll-card:nth-child(11) .coll-bg{background:linear-gradient(135deg,#281e20 0%,#402e32 100%)}
+    .coll-card:nth-child(12) .coll-bg{background:linear-gradient(135deg,#202820 0%,#304030 100%)}
 
-    /* ── HERO ── */
-    .hero-wrap {
-      position: relative;
-      height: 600vh;
+    .coll-icon{
+      width:38px;height:38px;stroke:rgba(201,169,110,.5);stroke-width:1.2;fill:none;
+      position:absolute;top:1rem;left:1rem;
+      transition:stroke .3s,transform .35s;
     }
-    .hero-sticky {
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      overflow: hidden;
-    }
-    #hero-canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .hero-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        to bottom,
-        rgba(30,23,18,0.35) 0%,
-        rgba(30,23,18,0.1) 50%,
-        rgba(30,23,18,0.55) 100%
-      );
-    }
-    .hero-content {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 2rem;
-      opacity: 1;
-      transform: translateY(0);
-      transition: opacity 0.3s, transform 0.3s;
-    }
-    .hero-eyebrow {
-      font-family: var(--ff-body);
-      font-size: 0.72rem;
-      font-weight: 400;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--gold-lt);
-      margin-bottom: 1.4rem;
-      opacity: 0;
-      transform: translateY(16px);
-      animation: fadeUp 0.9s 0.3s forwards;
-    }
-    .hero-title {
-      font-family: var(--ff-display);
-      font-size: clamp(3rem, 7vw, 6.5rem);
-      font-weight: 300;
-      line-height: 1.06;
-      color: var(--white);
-      margin-bottom: 1.6rem;
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeUp 1s 0.55s forwards;
-    }
-    .hero-title em {
-      font-style: italic;
-      color: var(--gold-lt);
-    }
-    .hero-sub {
-      font-family: var(--ff-body);
-      font-size: 1rem;
-      font-weight: 300;
-      letter-spacing: 0.06em;
-      color: rgba(253,250,245,0.8);
-      max-width: 480px;
-      line-height: 1.7;
-      margin-bottom: 2.5rem;
-      opacity: 0;
-      transform: translateY(16px);
-      animation: fadeUp 1s 0.8s forwards;
-    }
-    .hero-btns {
-      display: flex;
-      gap: 1rem;
-      opacity: 0;
-      transform: translateY(14px);
-      animation: fadeUp 1s 1s forwards;
-    }
-    .btn-primary {
-      font-family: var(--ff-body);
-      font-size: 0.75rem;
-      font-weight: 400;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--earth);
-      background: var(--gold);
-      padding: 0.9rem 2.2rem;
-      text-decoration: none;
-      transition: background 0.3s, transform 0.2s;
-    }
-    .btn-primary:hover { background: var(--gold-lt); transform: translateY(-1px); }
-    .btn-ghost {
-      font-family: var(--ff-body);
-      font-size: 0.75rem;
-      font-weight: 400;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--white);
-      background: transparent;
-      border: 1px solid rgba(253,250,245,0.45);
-      padding: 0.9rem 2.2rem;
-      text-decoration: none;
-      transition: border-color 0.3s, background 0.3s;
-    }
-    .btn-ghost:hover { border-color: var(--gold); background: rgba(201,169,110,0.12); }
-    .hero-scroll-hint {
-      position: absolute;
-      bottom: 2.2rem;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
-      opacity: 0;
-      animation: fadeUp 1s 1.5s forwards;
-    }
-    .hero-scroll-hint span {
-      font-size: 0.65rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: rgba(253,250,245,0.55);
-    }
-    .scroll-line {
-      width: 1px;
-      height: 48px;
-      background: linear-gradient(to bottom, rgba(253,250,245,0.55), transparent);
-      animation: scrollPulse 2s ease-in-out infinite;
-    }
+    .coll-card:hover .coll-icon{stroke:var(--gold);transform:scale(1.15) rotate(-5deg)}
 
-    /* ── TRUST BAR ── */
-    .trust-bar {
-      background: var(--earth);
-      padding: 1.1rem 3rem;
-      display: flex;
-      justify-content: center;
-      gap: 4rem;
-      flex-wrap: wrap;
+    .coll-content{
+      position:absolute;inset:0;
+      display:flex;flex-direction:column;justify-content:flex-end;
+      padding:1rem 1.1rem;
+      background:linear-gradient(to top,rgba(10,7,5,.85) 0%,transparent 60%);
+      z-index:3;
     }
-    .trust-item {
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
+    .coll-name{
+      font-family:var(--ff-display);font-size:1rem;font-weight:300;
+      color:var(--white);line-height:1.2;margin-bottom:.25rem;
+      transform:translateY(6px);transition:transform .35s;
     }
-    .trust-icon {
-      width: 18px;
-      height: 18px;
-      color: var(--gold);
-      flex-shrink: 0;
+    .coll-card:hover .coll-name{transform:translateY(-2px)}
+    .coll-count{
+      font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;
+      color:var(--gold);opacity:.8;
+      transform:translateY(8px);opacity:0;
+      transition:transform .35s .05s,opacity .35s .05s;
     }
-    .trust-item span {
-      font-size: 0.72rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--sand);
+    .coll-card:hover .coll-count{transform:translateY(0);opacity:1}
+    .coll-arrow{
+      position:absolute;top:.9rem;right:.9rem;
+      width:28px;height:28px;border-radius:50%;
+      border:1px solid rgba(201,169,110,0);
+      display:flex;align-items:center;justify-content:center;
+      opacity:0;transform:scale(.7);
+      transition:opacity .3s,transform .3s,border-color .3s,background .3s;
+      z-index:4;
     }
+    .coll-card:hover .coll-arrow{opacity:1;transform:scale(1);border-color:rgba(201,169,110,.5);background:rgba(201,169,110,.1)}
+    .coll-arrow svg{width:12px;height:12px;stroke:var(--gold);fill:none}
 
-    /* ── SECTION SHARED ── */
-    section { padding: 7rem 3rem; }
-    .section-eyebrow {
-      font-family: var(--ff-body);
-      font-size: 0.68rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--clay);
-      margin-bottom: 1rem;
-    }
-    .section-title {
-      font-family: var(--ff-display);
-      font-size: clamp(2.2rem, 4vw, 3.8rem);
-      font-weight: 300;
-      line-height: 1.12;
-      color: var(--earth);
-      margin-bottom: 1.4rem;
-    }
-    .section-title em { font-style: italic; color: var(--clay); }
-    .section-body {
-      font-size: 0.95rem;
-      line-height: 1.8;
-      color: var(--bark);
-      max-width: 520px;
-    }
+    /* ── REST OF SITE ── */
+    section{padding:7rem 3rem}
+    .section-eyebrow{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--clay);margin-bottom:1rem}
+    .section-title{font-family:var(--ff-display);font-size:clamp(2.2rem,4vw,3.8rem);font-weight:300;line-height:1.12;color:var(--earth);margin-bottom:1.4rem}
+    .section-title em{font-style:italic;color:var(--clay)}
+    .section-body{font-size:.95rem;line-height:1.8;color:var(--bark);max-width:520px}
 
-    /* ── FEATURES ── */
-    .features { background: var(--white); }
-    .features-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 5rem;
-      align-items: center;
-    }
-    .features-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-    }
-    .feature-card {
-      padding: 2rem 1.6rem;
-      background: var(--stone);
-      border-top: 2px solid var(--gold);
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.6s, transform 0.6s;
-    }
-    .feature-card.visible { opacity: 1; transform: translateY(0); }
-    .feature-card:nth-child(2) { transition-delay: 0.1s; }
-    .feature-card:nth-child(3) { transition-delay: 0.2s; }
-    .feature-card:nth-child(4) { transition-delay: 0.3s; }
-    .feature-num {
-      font-family: var(--ff-display);
-      font-size: 2.2rem;
-      font-weight: 300;
-      color: var(--gold);
-      margin-bottom: 0.6rem;
-    }
-    .feature-name {
-      font-family: var(--ff-body);
-      font-size: 0.78rem;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--earth);
-      margin-bottom: 0.5rem;
-    }
-    .feature-desc {
-      font-size: 0.85rem;
-      line-height: 1.7;
-      color: var(--bark);
-    }
-    .features-text { padding-right: 2rem; }
-    .features-divider {
-      width: 48px;
-      height: 1px;
-      background: var(--gold);
-      margin: 1.5rem 0;
-    }
+    /* FEATURES */
+    .features{background:var(--white)}
+    .features-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+    .features-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+    .feature-card{padding:2rem 1.6rem;background:var(--stone);border-top:2px solid var(--gold);opacity:0;transform:translateY(30px);transition:opacity .6s,transform .6s,box-shadow .3s}
+    .feature-card.visible{opacity:1;transform:translateY(0)}
+    .feature-card:hover{box-shadow:0 8px 32px rgba(74,55,40,.1);transform:translateY(-3px)}
+    .feature-card:nth-child(2){transition-delay:.1s}
+    .feature-card:nth-child(3){transition-delay:.2s}
+    .feature-card:nth-child(4){transition-delay:.3s}
+    .feature-num{font-family:var(--ff-display);font-size:2.2rem;font-weight:300;color:var(--gold);margin-bottom:.6rem}
+    .feature-name{font-size:.78rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--earth);margin-bottom:.5rem}
+    .feature-desc{font-size:.85rem;line-height:1.7;color:var(--bark)}
+    .features-text{padding-right:2rem}
+    .features-divider{width:48px;height:1px;background:var(--gold);margin:1.5rem 0}
 
-    /* ── CATEGORIES ── */
-    .categories { background: var(--warm); padding: 7rem 3rem; }
-    .categories-inner { max-width: 1200px; margin: 0 auto; }
-    .categories-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      margin-bottom: 3rem;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-    }
-    .cat-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      grid-template-rows: auto auto;
-      gap: 1rem;
-    }
-    .cat-card {
-      position: relative;
-      overflow: hidden;
-      cursor: pointer;
-      background: var(--sand);
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.6s, transform 0.6s;
-    }
-    .cat-card.visible { opacity: 1; transform: translateY(0); }
-    .cat-card:nth-child(1) { grid-column: span 2; grid-row: span 2; }
-    .cat-card:nth-child(2) { transition-delay: 0.08s; }
-    .cat-card:nth-child(3) { transition-delay: 0.16s; }
-    .cat-card:nth-child(4) { transition-delay: 0.24s; }
-    .cat-card:nth-child(5) { transition-delay: 0.32s; }
-    .cat-img {
-      width: 100%;
-      height: 100%;
-      min-height: 220px;
-      object-fit: cover;
-      display: block;
-      transition: transform 0.6s ease;
-      background: var(--sand);
-    }
-    .cat-card:first-child .cat-img { min-height: 460px; }
-    .cat-card:hover .cat-img { transform: scale(1.04); }
-    .cat-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(30,23,18,0.75) 0%, transparent 55%);
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding: 1.6rem;
-      transition: background 0.4s;
-    }
-    .cat-card:hover .cat-overlay {
-      background: linear-gradient(to top, rgba(30,23,18,0.88) 0%, rgba(30,23,18,0.15) 55%);
-    }
-    .cat-label {
-      font-family: var(--ff-display);
-      font-size: 1.5rem;
-      font-weight: 300;
-      color: var(--white);
-      margin-bottom: 0.3rem;
-    }
-    .cat-card:first-child .cat-label { font-size: 2.2rem; }
-    .cat-count {
-      font-size: 0.7rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--gold-lt);
-    }
-    .cat-arrow {
-      position: absolute;
-      top: 1.4rem;
-      right: 1.4rem;
-      width: 34px;
-      height: 34px;
-      border: 1px solid rgba(253,250,245,0.35);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity 0.3s, background 0.3s;
-    }
-    .cat-card:hover .cat-arrow { opacity: 1; background: rgba(201,169,110,0.25); }
-    .cat-arrow svg { width: 14px; height: 14px; stroke: var(--white); }
-    .view-all-link {
-      font-size: 0.73rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--bark);
-      text-decoration: none;
-      border-bottom: 1px solid var(--clay);
-      padding-bottom: 2px;
-      transition: color 0.3s;
-    }
-    .view-all-link:hover { color: var(--earth); }
+    /* MARQUEE */
+    .marquee-strip{background:var(--earth);padding:1rem 0;overflow:hidden;white-space:nowrap}
+    .marquee-track{display:inline-block;animation:marquee 28s linear infinite}
+    .marquee-track span{font-family:var(--ff-display);font-size:1.1rem;font-style:italic;font-weight:300;color:var(--sand);padding:0 2.5rem}
+    .marquee-track span.dot{font-style:normal;color:var(--gold);padding:0;font-size:.6rem}
 
-    /* ── MARQUEE ── */
-    .marquee-strip {
-      background: var(--earth);
-      padding: 1rem 0;
-      overflow: hidden;
-      white-space: nowrap;
-    }
-    .marquee-track {
-      display: inline-block;
-      animation: marquee 28s linear infinite;
-    }
-    .marquee-track span {
-      font-family: var(--ff-display);
-      font-size: 1.1rem;
-      font-style: italic;
-      font-weight: 300;
-      color: var(--sand);
-      padding: 0 2.5rem;
-    }
-    .marquee-track span.dot {
-      font-style: normal;
-      color: var(--gold);
-      padding: 0;
-      font-size: 0.6rem;
-    }
+    /* TESTIMONIALS */
+    .testimonials{background:var(--stone)}
+    .testimonials-inner{max-width:1100px;margin:0 auto}
+    .testi-header{text-align:center;margin-bottom:4rem}
+    .testi-header .section-body{margin:0 auto;text-align:center}
+    .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+    .testi-card{background:var(--white);padding:2.2rem;border-bottom:2px solid var(--gold);opacity:0;transform:translateY(24px);transition:opacity .6s,transform .6s,box-shadow .3s}
+    .testi-card.visible{opacity:1;transform:translateY(0)}
+    .testi-card:hover{box-shadow:0 12px 40px rgba(74,55,40,.12);transform:translateY(-4px)}
+    .testi-card:nth-child(2){transition-delay:.12s}
+    .testi-card:nth-child(3){transition-delay:.24s}
+    .testi-stars{display:flex;gap:3px;margin-bottom:1.2rem}
+    .testi-stars svg{width:13px;height:13px;fill:var(--gold)}
+    .testi-quote{font-family:var(--ff-display);font-size:1.05rem;font-weight:300;font-style:italic;line-height:1.65;color:var(--earth);margin-bottom:1.5rem}
+    .testi-author{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--clay)}
 
-    /* ── TESTIMONIALS ── */
-    .testimonials { background: var(--stone); }
-    .testimonials-inner { max-width: 1100px; margin: 0 auto; }
-    .testi-header { text-align: center; margin-bottom: 4rem; }
-    .testi-header .section-body { margin: 0 auto; text-align: center; }
-    .testi-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-    }
-    .testi-card {
-      background: var(--white);
-      padding: 2.2rem;
-      border-bottom: 2px solid var(--gold);
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.6s, transform 0.6s;
-    }
-    .testi-card.visible { opacity: 1; transform: translateY(0); }
-    .testi-card:nth-child(2) { transition-delay: 0.12s; }
-    .testi-card:nth-child(3) { transition-delay: 0.24s; }
-    .testi-stars {
-      display: flex;
-      gap: 3px;
-      margin-bottom: 1.2rem;
-    }
-    .testi-stars svg {
-      width: 13px;
-      height: 13px;
-      fill: var(--gold);
-    }
-    .testi-quote {
-      font-family: var(--ff-display);
-      font-size: 1.05rem;
-      font-weight: 300;
-      font-style: italic;
-      line-height: 1.65;
-      color: var(--earth);
-      margin-bottom: 1.5rem;
-    }
-    .testi-author {
-      font-size: 0.72rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--clay);
-    }
+    /* CTA */
+    .cta-section{background:var(--earth);padding:8rem 3rem;text-align:center;position:relative;overflow:hidden}
+    .cta-section::before{content:'';position:absolute;inset:0;background-image:radial-gradient(ellipse at 30% 50%,rgba(201,169,110,.08) 0%,transparent 60%),radial-gradient(ellipse at 70% 50%,rgba(201,169,110,.06) 0%,transparent 60%)}
+    .cta-inner{position:relative;max-width:680px;margin:0 auto}
+    .cta-eyebrow{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem}
+    .cta-title{font-family:var(--ff-display);font-size:clamp(2.4rem,5vw,4.2rem);font-weight:300;line-height:1.1;color:var(--white);margin-bottom:1.5rem}
+    .cta-title em{font-style:italic;color:var(--gold-lt)}
+    .cta-body{font-size:.95rem;line-height:1.8;color:var(--sand);margin-bottom:2.8rem}
+    .cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+    .btn-gold{font-size:.75rem;font-weight:400;letter-spacing:.14em;text-transform:uppercase;color:var(--earth);background:var(--gold);padding:1rem 2.6rem;text-decoration:none;transition:background .3s,transform .2s;font-family:var(--ff-body)}
+    .btn-gold:hover{background:var(--gold-lt);transform:translateY(-2px)}
+    .btn-outline-lt{font-size:.75rem;font-weight:400;letter-spacing:.14em;text-transform:uppercase;color:var(--sand);background:transparent;border:1px solid rgba(212,197,169,.35);padding:1rem 2.6rem;text-decoration:none;transition:border-color .3s,color .3s;font-family:var(--ff-body)}
+    .btn-outline-lt:hover{border-color:var(--gold);color:var(--white)}
+    .cta-stats{display:flex;justify-content:center;gap:4rem;margin-top:4rem;padding-top:3rem;border-top:1px solid rgba(212,197,169,.15);flex-wrap:wrap}
+    .cta-stat-num{font-family:var(--ff-display);font-size:2.8rem;font-weight:300;color:var(--gold-lt);display:block}
+    .cta-stat-label{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--clay)}
 
-    /* ── CTA ── */
-    .cta-section {
-      background: var(--earth);
-      padding: 8rem 3rem;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .cta-section::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image: radial-gradient(ellipse at 30% 50%, rgba(201,169,110,0.08) 0%, transparent 60%),
-                        radial-gradient(ellipse at 70% 50%, rgba(201,169,110,0.06) 0%, transparent 60%);
-    }
-    .cta-inner { position: relative; max-width: 680px; margin: 0 auto; }
-    .cta-eyebrow {
-      font-size: 0.68rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 1.2rem;
-    }
-    .cta-title {
-      font-family: var(--ff-display);
-      font-size: clamp(2.4rem, 5vw, 4.2rem);
-      font-weight: 300;
-      line-height: 1.1;
-      color: var(--white);
-      margin-bottom: 1.5rem;
-    }
-    .cta-title em { font-style: italic; color: var(--gold-lt); }
-    .cta-body {
-      font-size: 0.95rem;
-      line-height: 1.8;
-      color: var(--sand);
-      margin-bottom: 2.8rem;
-    }
-    .cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-    .btn-gold {
-      font-size: 0.75rem;
-      font-weight: 400;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--earth);
-      background: var(--gold);
-      padding: 1rem 2.6rem;
-      text-decoration: none;
-      transition: background 0.3s;
-      font-family: var(--ff-body);
-    }
-    .btn-gold:hover { background: var(--gold-lt); }
-    .btn-outline-lt {
-      font-size: 0.75rem;
-      font-weight: 400;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--sand);
-      background: transparent;
-      border: 1px solid rgba(212,197,169,0.35);
-      padding: 1rem 2.6rem;
-      text-decoration: none;
-      transition: border-color 0.3s, color 0.3s;
-      font-family: var(--ff-body);
-    }
-    .btn-outline-lt:hover { border-color: var(--gold); color: var(--white); }
-    .cta-stats {
-      display: flex;
-      justify-content: center;
-      gap: 4rem;
-      margin-top: 4rem;
-      padding-top: 3rem;
-      border-top: 1px solid rgba(212,197,169,0.15);
-      flex-wrap: wrap;
-    }
-    .cta-stat-num {
-      font-family: var(--ff-display);
-      font-size: 2.8rem;
-      font-weight: 300;
-      color: var(--gold-lt);
-      display: block;
-    }
-    .cta-stat-label {
-      font-size: 0.68rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--clay);
-    }
+    /* FOOTER */
+    footer{background:var(--charcoal);padding:4rem 3rem 2rem}
+    .footer-inner{max-width:1200px;margin:0 auto}
+    .footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem}
+    .footer-brand{font-family:var(--ff-display);font-size:1.6rem;font-weight:300;color:var(--white);margin-bottom:1rem}
+    .footer-tagline{font-size:.83rem;line-height:1.7;color:rgba(212,197,169,.55);margin-bottom:1.5rem}
+    .footer-col-title{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem}
+    .footer-col ul{list-style:none}
+    .footer-col ul li{margin-bottom:.6rem}
+    .footer-col ul a{font-size:.83rem;color:rgba(212,197,169,.55);text-decoration:none;transition:color .3s}
+    .footer-col ul a:hover{color:var(--sand)}
+    .footer-bottom{border-top:1px solid rgba(212,197,169,.1);padding-top:1.8rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+    .footer-copy{font-size:.75rem;color:rgba(212,197,169,.35)}
+    .footer-note{font-size:.7rem;color:rgba(212,197,169,.25);font-style:italic}
 
-    /* ── FOOTER ── */
-    footer {
-      background: var(--charcoal);
-      padding: 4rem 3rem 2rem;
-    }
-    .footer-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .footer-top {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 3rem;
-      margin-bottom: 3rem;
-    }
-    .footer-brand {
-      font-family: var(--ff-display);
-      font-size: 1.6rem;
-      font-weight: 300;
-      color: var(--white);
-      margin-bottom: 1rem;
-    }
-    .footer-tagline {
-      font-size: 0.83rem;
-      line-height: 1.7;
-      color: rgba(212,197,169,0.55);
-      margin-bottom: 1.5rem;
-    }
-    .footer-col-title {
-      font-size: 0.68rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 1.2rem;
-    }
-    .footer-col ul { list-style: none; }
-    .footer-col ul li { margin-bottom: 0.6rem; }
-    .footer-col ul a {
-      font-size: 0.83rem;
-      color: rgba(212,197,169,0.55);
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-    .footer-col ul a:hover { color: var(--sand); }
-    .footer-bottom {
-      border-top: 1px solid rgba(212,197,169,0.1);
-      padding-top: 1.8rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    .footer-copy {
-      font-size: 0.75rem;
-      color: rgba(212,197,169,0.35);
-    }
-    .footer-note {
-      font-size: 0.7rem;
-      color: rgba(212,197,169,0.25);
-      font-style: italic;
-    }
+    /* KEYFRAMES */
+    @keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+    @keyframes scrollPulse{0%,100%{opacity:.5;transform:scaleY(1)}50%{opacity:1;transform:scaleY(1.15)}}
+    @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    @keyframes pulseRing{0%{transform:scale(1);opacity:.6}100%{transform:scale(1.55);opacity:0}}
 
-    /* ── ANIMATIONS ── */
-    @keyframes fadeUp {
-      to { opacity: 1; transform: translateY(0); }
+    /* PULSE RINGS on trust icons */
+    .trust-icon-circle .ring{
+      position:absolute;inset:0;border-radius:50%;
+      border:1px solid rgba(201,169,110,.4);
+      animation:pulseRing 2.4s ease-out infinite;
+      pointer-events:none;
     }
-    @keyframes scrollPulse {
-      0%, 100% { opacity: 0.5; transform: scaleY(1); }
-      50% { opacity: 1; transform: scaleY(1.15); }
-    }
-    @keyframes marquee {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
+    .trust-icon-circle .ring:nth-child(2){animation-delay:.8s}
 
-    /* ── LOADING SCREEN ── */
-    #loader {
-      position: fixed;
-      inset: 0;
-      background: var(--earth);
-      z-index: 999;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 1.4rem;
-      transition: opacity 0.6s, visibility 0.6s;
-    }
-    #loader.hidden { opacity: 0; visibility: hidden; }
-    .loader-logo {
-      font-family: var(--ff-display);
-      font-size: 1.8rem;
-      font-weight: 300;
-      color: var(--white);
-      letter-spacing: 0.06em;
-    }
-    .loader-bar-wrap {
-      width: 200px;
-      height: 1px;
-      background: rgba(212,197,169,0.2);
-    }
-    .loader-bar {
-      height: 100%;
-      background: var(--gold);
-      width: 0%;
-      transition: width 0.1s linear;
-    }
-    .loader-pct {
-      font-size: 0.68rem;
-      letter-spacing: 0.2em;
-      color: var(--clay);
-    }
-
-    /* ── PLACEHOLDER IMAGES ── */
-    .cat-placeholder {
-      width: 100%;
-      height: 100%;
-      min-height: 220px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--ff-display);
-      font-size: 0.9rem;
-      color: var(--bark);
-      letter-spacing: 0.08em;
-      background: var(--sand);
-    }
-    .cat-card:first-child .cat-placeholder { min-height: 460px; }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 900px) {
-      nav { padding: 1.2rem 1.5rem; }
-      .nav-links { display: none; }
-      section { padding: 5rem 1.5rem; }
-      .features-inner { grid-template-columns: 1fr; gap: 3rem; }
-      .features-text { padding-right: 0; }
-      .cat-grid { grid-template-columns: 1fr 1fr; }
-      .cat-card:first-child { grid-column: span 2; }
-      .testi-grid { grid-template-columns: 1fr; }
-      .footer-top { grid-template-columns: 1fr 1fr; }
-      .trust-bar { gap: 2rem; }
-      .cta-stats { gap: 2.5rem; }
+    @media(max-width:900px){
+      nav{padding:1.2rem 1.5rem}
+      .nav-links{display:none}
+      section{padding:5rem 1.5rem}
+      .features-inner{grid-template-columns:1fr;gap:3rem}
+      .features-text{padding-right:0}
+      .testi-grid{grid-template-columns:1fr}
+      .footer-top{grid-template-columns:1fr 1fr}
+      .coll-grid{grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(6,1fr)}
+      .trust-icon-pill.spread{width:120px}
+      .trust-icon-circle{width:70px;height:70px}
     }
   </style>
 </head>
 <body>
 
-  <!-- LOADER -->
-  <div id="loader">
-    <div class="loader-logo">Blue Leaf</div>
-    <div class="loader-bar-wrap">
-      <div class="loader-bar" id="loader-bar"></div>
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-logo">Blue Leaf</div>
+  <div class="loader-bar-wrap"><div class="loader-bar" id="loader-bar"></div></div>
+  <div class="loader-pct" id="loader-pct">0%</div>
+</div>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <a href="#" class="nav-logo">Blue Leaf</a>
+  <ul class="nav-links">
+    <li><a href="#features">About</a></li>
+    <li><a href="#collections">Collections</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Shop Now</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero-wrap" id="hero-wrap">
+  <div class="hero-sticky">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-overlay"></div>
+    <div class="hero-content" id="hero-content">
+      <p class="hero-eyebrow">Australia's Premium Bathware</p>
+      <h1 class="hero-title">Where <em>Luxury</em><br>Meets Function</h1>
+      <p class="hero-sub">Curated bathware, tiles & tapware from Australia's finest brands — designed for the way you live.</p>
+      <div class="hero-btns">
+        <a href="#collections" class="btn-primary">Explore Collections</a>
+        <a href="#contact" class="btn-ghost">Visit Showroom</a>
+      </div>
     </div>
-    <div class="loader-pct" id="loader-pct">0%</div>
-  </div>
-
-  <!-- NAV -->
-  <nav id="main-nav">
-    <a href="#" class="nav-logo">Blue Leaf</a>
-    <ul class="nav-links">
-      <li><a href="#features">About</a></li>
-      <li><a href="#categories">Collections</a></li>
-      <li><a href="#testimonials">Reviews</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-    <a href="#contact" class="nav-cta">Shop Now</a>
-  </nav>
-
-  <!-- HERO -->
-  <div class="hero-wrap" id="hero-wrap">
-    <div class="hero-sticky">
-      <canvas id="hero-canvas"></canvas>
-      <div class="hero-overlay"></div>
-      <div class="hero-content" id="hero-content">
-        <p class="hero-eyebrow">Australia's Premium Bathware</p>
-        <h1 class="hero-title">Where <em>Luxury</em><br>Meets Function</h1>
-        <p class="hero-sub">Curated bathware, tiles & tapware from Australia's finest brands — designed for the way you live.</p>
-        <div class="hero-btns">
-          <a href="#categories" class="btn-primary">Explore Collections</a>
-          <a href="#contact" class="btn-ghost">Visit Showroom</a>
-        </div>
-      </div>
-      <div class="hero-scroll-hint">
-        <div class="scroll-line"></div>
-        <span>Scroll</span>
-      </div>
+    <div class="hero-scroll-hint">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
     </div>
   </div>
+</div>
 
-  <!-- TRUST BAR -->
-  <div class="trust-bar">
-    <div class="trust-item">
-      <svg class="trust-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12"/></svg>
-      <span>Free Delivery Over $150</span>
+<!-- TRUST BURST -->
+<div class="trust-burst-wrap" id="trust-burst-wrap">
+  <div class="trust-burst-sticky" id="trust-burst-sticky">
+    <div class="trust-burst-bg"></div>
+
+    <!-- Center headline (shows when icons spread) -->
+    <div class="trust-headline" id="trust-headline">
+      <h2>Built on <em>Trust</em><br>& Quality</h2>
+      <p>Every promise. Every time.</p>
     </div>
-    <div class="trust-item">
-      <svg class="trust-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
-      <span>Voted Best Service</span>
-    </div>
-    <div class="trust-item">
-      <svg class="trust-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>
-      <span>Easy 30-Day Returns</span>
-    </div>
-    <div class="trust-item">
-      <svg class="trust-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
-      <span>Proudly Australian</span>
+
+    <!-- 4 trust icon pills spread from center bottom -->
+    <div class="trust-icons-row" id="trust-icons-row">
+      <div class="trust-icon-pill" data-index="0">
+        <div class="trust-icon-circle">
+          <div class="ring"></div><div class="ring"></div>
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677"/>
+          </svg>
+        </div>
+        <div class="trust-icon-label">Free Delivery<br>Over $150</div>
+      </div>
+      <div class="trust-icon-pill" data-index="1">
+        <div class="trust-icon-circle">
+          <div class="ring"></div><div class="ring"></div>
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+          </svg>
+        </div>
+        <div class="trust-icon-label">Voted Best<br>Service</div>
+      </div>
+      <div class="trust-icon-pill" data-index="2">
+        <div class="trust-icon-circle">
+          <div class="ring"></div><div class="ring"></div>
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/>
+          </svg>
+        </div>
+        <div class="trust-icon-label">Easy 30-Day<br>Returns</div>
+      </div>
+      <div class="trust-icon-pill" data-index="3">
+        <div class="trust-icon-circle">
+          <div class="ring"></div><div class="ring"></div>
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
+          </svg>
+        </div>
+        <div class="trust-icon-label">Proudly<br>Australian</div>
+      </div>
     </div>
   </div>
+</div>
 
-  <!-- FEATURES -->
-  <section class="features" id="features">
-    <div class="features-inner">
-      <div class="features-text">
-        <p class="section-eyebrow">Why Blue Leaf</p>
-        <h2 class="section-title">Crafted for the<br><em>Discerning Home</em></h2>
-        <div class="features-divider"></div>
-        <p class="section-body">For over a decade, Blue Leaf Bathware has been Australia's most trusted source for premium bathroom and kitchen products. We carry only what we believe in — every tap, basin and fitting hand-selected from the world's finest manufacturers.</p>
-      </div>
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-num">1,000+</div>
-          <div class="feature-name">In-Stock Products</div>
-          <div class="feature-desc">Australia's largest in-stock bathware collection, ready to ship.</div>
-        </div>
-        <div class="feature-card">
-          <div class="feature-num">26+</div>
-          <div class="feature-name">Premium Brands</div>
-          <div class="feature-desc">Official retailer for Caroma, Phoenix, Meir, Nero and more.</div>
-        </div>
-        <div class="feature-card">
-          <div class="feature-num">10yr</div>
-          <div class="feature-name">Warranty Support</div>
-          <div class="feature-desc">Full manufacturer warranties backed by our local team.</div>
-        </div>
-        <div class="feature-card">
-          <div class="feature-num">5★</div>
-          <div class="feature-name">Customer Rating</div>
-          <div class="feature-desc">Voted best service by thousands of happy renovators.</div>
-        </div>
-      </div>
+<!-- COLLECTIONS -->
+<div class="collections-wrap" id="collections-wrap">
+  <div class="collections-sticky" id="collections">
+    <div class="collections-header" id="coll-header">
+      <p class="collections-eyebrow">Our Collections</p>
+      <h2 class="collections-title">Shop by <em>Category</em></h2>
     </div>
-  </section>
-
-  <!-- MARQUEE -->
-  <div class="marquee-strip">
-    <div class="marquee-track" id="marquee-track">
-      <span>Caroma</span><span class="dot">◆</span>
-      <span>Phoenix</span><span class="dot">◆</span>
-      <span>Meir</span><span class="dot">◆</span>
-      <span>Nero Tapware</span><span class="dot">◆</span>
-      <span>Fienza</span><span class="dot">◆</span>
-      <span>Decina</span><span class="dot">◆</span>
-      <span>Abey</span><span class="dot">◆</span>
-      <span>Remer</span><span class="dot">◆</span>
-      <span>Timberline</span><span class="dot">◆</span>
-      <span>Oliveri</span><span class="dot">◆</span>
-      <span>Geberit</span><span class="dot">◆</span>
-      <span>Parisi</span><span class="dot">◆</span>
-      <span>Caroma</span><span class="dot">◆</span>
-      <span>Phoenix</span><span class="dot">◆</span>
-      <span>Meir</span><span class="dot">◆</span>
-      <span>Nero Tapware</span><span class="dot">◆</span>
-      <span>Fienza</span><span class="dot">◆</span>
-      <span>Decina</span><span class="dot">◆</span>
-      <span>Abey</span><span class="dot">◆</span>
-      <span>Remer</span><span class="dot">◆</span>
-      <span>Timberline</span><span class="dot">◆</span>
-      <span>Oliveri</span><span class="dot">◆</span>
-      <span>Geberit</span><span class="dot">◆</span>
-      <span>Parisi</span><span class="dot">◆</span>
+    <div class="coll-grid" id="coll-grid">
+      <!-- 12 cards: 3 cols × 4 rows -->
+      <div class="coll-card">
+        <div class="coll-bg"></div>
+        <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+        <div class="coll-content">
+          <div class="coll-name">Vanities & Cabinets</div>
+          <div class="coll-count">180+ Products</div>
+        </div>
+        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
+      </div>
+      <div class="coll-card">
+        <div class="coll-bg"></div>
+        <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
+        <div class="coll-content">
+          <div class="coll-name">Shaving Cabinets</div>
+          <div class="coll-count">65+ Products</div>
+        </div>
+        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
+      </div>
+      <div class="coll-card">
+        <div class="coll-bg"></div>
+        <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19h18M5 19V8.5A2.5 2.5 0 017.5 6h9A2.5 2.5 0 0119 8.5V19"/><path d="M9 6V4m6 2V4"/></svg>
+        <div class="coll-content">
+          <div class="coll-name">Baths</div>
+          <div class="coll-count">95+ Products</div>
+        </div>
+        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
+      </div>
+      <div class="coll-card">
+        <div class="coll-bg"></div>
+        <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v2m0 14v2M5 12H3m18 0h-2m-2.05-6.95l-1.41 1.41M7.46 16.54l-1.41 1.41m12.9 0l-1.41-1.41M7.46 7.46L6.05 6.05"/><circle cx="12" cy="12" r="4"/></svg>
+        <div class="coll-content">
+          <div class="coll-name">Showers</div>
+          <div class="coll-count">120+ Products</div>
+        </div>
+        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
+      </div>
+      <div class="coll-card">
+        <div class="coll-bg"></div>
+        <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+        <div class="coll-content">
+          <div class="coll-name">Basins</div>
+          <div class="coll-count">140+ Products</div>
+        </div>
+        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
+      </div>
+      <div class="coll-card">
+        <div class="coll-bg"></div>
+        <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M6 13.5V3.75m0 9.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 3.75V16.5m12-3V3.75m0 9.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 3.75V16.5m-6-9V3.75m0 3.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 9.75V10.5"/></svg>
+        <div class="coll-content">
+          <div class="coll-name">Tapware</div>
+          <div class="coll-count">320+ Products</div>
+        </div>
+        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
+      </div>
+      <div class="coll-card">
+        <div class="coll-bg"></div>
+        <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h.01M15 9h.01M9 15h.01M15 15h.01M12 12h.01"/></svg>
+        <div class="coll-content">
+          <div class="coll-name">Toilets</div>
+          <div class="coll-count">75+ Products</div>
+        </div>
+        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
+      </div>
+      <div class="coll-card">
+        <div class="coll-bg"></div>
+        <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18"/></svg>
+        <div class="coll-content">
+          <div class="coll-name">LED Mirrors</div>
+          <div class="coll-count">60+ Products</div>
+        </div>
+        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
+      </div>
+      <div class="coll-card">
+        <div class="coll-bg"></div>
+        <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+        <div class="coll-content">
+          <div class="coll-name">Heated Towel Rails</div>
+          <div class="coll-count">45+ Products</div>
+        </div>
+        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
+      </div>
+      <div class="coll-card">
+        <div class="coll-bg"></div>
+        <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+        <div class="coll-content">
+          <div class="coll-name">Kitchen Sinks</div>
+          <div class="coll-count">85+ Products</div>
+        </div>
+        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
+      </div>
+      <div class="coll-card">
+        <div class="coll-bg"></div>
+        <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/></svg>
+        <div class="coll-content">
+          <div class="coll-name">Fans & Lighting</div>
+          <div class="coll-count">110+ Products</div>
+        </div>
+        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
+      </div>
+      <div class="coll-card">
+        <div class="coll-bg"></div>
+        <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        <div class="coll-content">
+          <div class="coll-name">Accessories</div>
+          <div class="coll-count">200+ Products</div>
+        </div>
+        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
+      </div>
     </div>
   </div>
+</div>
 
-  <!-- CATEGORIES -->
-  <section class="categories" id="categories">
-    <div class="categories-inner">
-      <div class="categories-header">
-        <div>
-          <p class="section-eyebrow">Our Collections</p>
-          <h2 class="section-title">Shop by <em>Category</em></h2>
-        </div>
-        <a href="https://blueleafbath.com.au/collections/all-bathroom-products" class="view-all-link">View All Collections</a>
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="features-inner">
+    <div class="features-text">
+      <p class="section-eyebrow">Why Blue Leaf</p>
+      <h2 class="section-title">Crafted for the<br><em>Discerning Home</em></h2>
+      <div class="features-divider"></div>
+      <p class="section-body">For over a decade, Blue Leaf Bathware has been Australia's most trusted source for premium bathroom and kitchen products. We carry only what we believe in — every tap, basin and fitting hand-selected.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card"><div class="feature-num">1,000+</div><div class="feature-name">In-Stock Products</div><div class="feature-desc">Australia's largest in-stock bathware collection, ready to ship.</div></div>
+      <div class="feature-card"><div class="feature-num">26+</div><div class="feature-name">Premium Brands</div><div class="feature-desc">Official retailer for Caroma, Phoenix, Meir, Nero and more.</div></div>
+      <div class="feature-card"><div class="feature-num">10yr</div><div class="feature-name">Warranty Support</div><div class="feature-desc">Full manufacturer warranties backed by our local team.</div></div>
+      <div class="feature-card"><div class="feature-num">5★</div><div class="feature-name">Customer Rating</div><div class="feature-desc">Voted best service by thousands of happy renovators.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip">
+  <div class="marquee-track">
+    <span>Caroma</span><span class="dot">◆</span><span>Phoenix</span><span class="dot">◆</span><span>Meir</span><span class="dot">◆</span><span>Nero Tapware</span><span class="dot">◆</span><span>Fienza</span><span class="dot">◆</span><span>Decina</span><span class="dot">◆</span><span>Abey</span><span class="dot">◆</span><span>Remer</span><span class="dot">◆</span><span>Timberline</span><span class="dot">◆</span><span>Oliveri</span><span class="dot">◆</span><span>Geberit</span><span class="dot">◆</span><span>Parisi</span><span class="dot">◆</span>
+    <span>Caroma</span><span class="dot">◆</span><span>Phoenix</span><span class="dot">◆</span><span>Meir</span><span class="dot">◆</span><span>Nero Tapware</span><span class="dot">◆</span><span>Fienza</span><span class="dot">◆</span><span>Decina</span><span class="dot">◆</span><span>Abey</span><span class="dot">◆</span><span>Remer</span><span class="dot">◆</span><span>Timberline</span><span class="dot">◆</span><span>Oliveri</span><span class="dot">◆</span><span>Geberit</span><span class="dot">◆</span><span>Parisi</span><span class="dot">◆</span>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="testimonials">
+  <div class="testimonials-inner">
+    <div class="testi-header">
+      <p class="section-eyebrow">Customer Stories</p>
+      <h2 class="section-title">Loved by <em>Thousands</em></h2>
+      <p class="section-body">Real Australians, real renovations.</p>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+        <p class="testi-quote">"The team at Blue Leaf are great. Competitive pricing, great knowledge and fantastic service. Everyone is raving about our bathroom."</p>
+        <div class="testi-author">Emily Thorne — Sydney, NSW</div>
       </div>
-      <div class="cat-grid">
-        <div class="cat-card">
-          <div class="cat-placeholder" style="background:#c9b99a;">Vanities & Cabinets</div>
-          <div class="cat-overlay">
-            <div class="cat-arrow">
-              <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg>
-            </div>
-            <div class="cat-label">Vanities & Cabinets</div>
-            <div class="cat-count">180+ Products</div>
-          </div>
-        </div>
-        <div class="cat-card">
-          <div class="cat-placeholder" style="background:#b5a58e; min-height:220px;">Tapware</div>
-          <div class="cat-overlay">
-            <div class="cat-arrow">
-              <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg>
-            </div>
-            <div class="cat-label">Tapware</div>
-            <div class="cat-count">320+ Products</div>
-          </div>
-        </div>
-        <div class="cat-card">
-          <div class="cat-placeholder" style="background:#a89680; min-height:220px;">Baths & Showers</div>
-          <div class="cat-overlay">
-            <div class="cat-arrow">
-              <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg>
-            </div>
-            <div class="cat-label">Baths & Showers</div>
-            <div class="cat-count">95+ Products</div>
-          </div>
-        </div>
-        <div class="cat-card">
-          <div class="cat-placeholder" style="background:#9d8b75; min-height:220px;">Toilets</div>
-          <div class="cat-overlay">
-            <div class="cat-arrow">
-              <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg>
-            </div>
-            <div class="cat-label">Toilets</div>
-            <div class="cat-count">75+ Products</div>
-          </div>
-        </div>
-        <div class="cat-card">
-          <div class="cat-placeholder" style="background:#8f7d68; min-height:220px;">LED Mirrors</div>
-          <div class="cat-overlay">
-            <div class="cat-arrow">
-              <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg>
-            </div>
-            <div class="cat-label">LED Mirrors</div>
-            <div class="cat-count">60+ Products</div>
-          </div>
-        </div>
+      <div class="testi-card">
+        <div class="testi-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+        <p class="testi-quote">"Easy to place an order, great price, quality products and very quick delivery. We would highly recommend Blue Leaf Bathware."</p>
+        <div class="testi-author">Ian Franks — Melbourne, VIC</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+        <p class="testi-quote">"Ordered in the evening, received it before Christmas. Great communication, fast delivery, competitive prices and high quality products."</p>
+        <div class="testi-author">Nicholas Van Zanten — Brisbane, QLD</div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- TESTIMONIALS -->
-  <section class="testimonials" id="testimonials">
-    <div class="testimonials-inner">
-      <div class="testi-header">
-        <p class="section-eyebrow">Customer Stories</p>
-        <h2 class="section-title">Loved by <em>Thousands</em></h2>
-        <p class="section-body">Real Australians, real renovations. Here's what they had to say about their Blue Leaf experience.</p>
-      </div>
-      <div class="testi-grid">
-        <div class="testi-card">
-          <div class="testi-stars">
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          </div>
-          <p class="testi-quote">"The team at Blue Leaf are great. Competitive pricing, great knowledge and fantastic service. Everyone is raving about our bathroom."</p>
-          <div class="testi-author">Emily Thorne — Sydney, NSW</div>
-        </div>
-        <div class="testi-card">
-          <div class="testi-stars">
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          </div>
-          <p class="testi-quote">"Easy to place an order, great price, quality products and very quick delivery. We would highly recommend using Blue Leaf Bathware."</p>
-          <div class="testi-author">Ian Franks — Melbourne, VIC</div>
-        </div>
-        <div class="testi-card">
-          <div class="testi-stars">
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          </div>
-          <p class="testi-quote">"Ordered in the evening, received it before Christmas. Great communication, fast delivery, competitive prices and high quality products."</p>
-          <div class="testi-author">Nicholas Van Zanten — Brisbane, QLD</div>
-        </div>
-      </div>
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="cta-inner">
+    <p class="cta-eyebrow">Ready to Transform Your Space?</p>
+    <h2 class="cta-title">Your Dream Bathroom<br><em>Starts Here</em></h2>
+    <p class="cta-body">Visit our Sydney showroom or shop online. Our team of experts is ready to help you find the perfect products for your next renovation project.</p>
+    <div class="cta-btns">
+      <a href="https://blueleafbath.com.au" class="btn-gold">Shop Online</a>
+      <a href="https://g.page/Blue-Leaf-Bathware" class="btn-outline-lt">Find Showroom</a>
     </div>
-  </section>
-
-  <!-- CTA -->
-  <section class="cta-section" id="contact">
-    <div class="cta-inner">
-      <p class="cta-eyebrow">Ready to Transform Your Space?</p>
-      <h2 class="cta-title">Your Dream Bathroom<br><em>Starts Here</em></h2>
-      <p class="cta-body">Visit our Sydney showroom or shop online. Our team of experts is ready to help you find the perfect products for your next renovation project.</p>
-      <div class="cta-btns">
-        <a href="https://blueleafbath.com.au" class="btn-gold">Shop Online</a>
-        <a href="https://g.page/Blue-Leaf-Bathware" class="btn-outline-lt">Find Showroom</a>
-      </div>
-      <div class="cta-stats">
-        <div>
-          <span class="cta-stat-num">1,000+</span>
-          <span class="cta-stat-label">Products in Stock</span>
-        </div>
-        <div>
-          <span class="cta-stat-num">26+</span>
-          <span class="cta-stat-label">Premium Brands</span>
-        </div>
-        <div>
-          <span class="cta-stat-num">10yr+</span>
-          <span class="cta-stat-label">Serving Australia</span>
-        </div>
-        <div>
-          <span class="cta-stat-num">5★</span>
-          <span class="cta-stat-label">Average Rating</span>
-        </div>
-      </div>
+    <div class="cta-stats">
+      <div><span class="cta-stat-num">1,000+</span><span class="cta-stat-label">Products in Stock</span></div>
+      <div><span class="cta-stat-num">26+</span><span class="cta-stat-label">Premium Brands</span></div>
+      <div><span class="cta-stat-num">10yr+</span><span class="cta-stat-label">Serving Australia</span></div>
+      <div><span class="cta-stat-num">5★</span><span class="cta-stat-label">Average Rating</span></div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-inner">
-      <div class="footer-top">
-        <div>
-          <div class="footer-brand">Blue Leaf</div>
-          <p class="footer-tagline">Australia's most trusted online supplier for vanities, toilets, baths, tapware and tiles. Proudly Australian owned and operated.</p>
-          <p style="font-size:0.75rem; color: rgba(212,197,169,0.35);">5/9 Ladbroke St, Milperra NSW 2214<br>Mon–Fri 8:30am–4:30pm</p>
-        </div>
-        <div class="footer-col">
-          <div class="footer-col-title">Shop</div>
-          <ul>
-            <li><a href="#">Bathroom</a></li>
-            <li><a href="#">Kitchen & Laundry</a></li>
-            <li><a href="#">Vanities</a></li>
-            <li><a href="#">Fans & Lighting</a></li>
-            <li><a href="#">Clearance Sale</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <div class="footer-col-title">Brands</div>
-          <ul>
-            <li><a href="#">Caroma</a></li>
-            <li><a href="#">Phoenix</a></li>
-            <li><a href="#">Meir</a></li>
-            <li><a href="#">Nero Tapware</a></li>
-            <li><a href="#">All Brands</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <div class="footer-col-title">Help</div>
-          <ul>
-            <li><a href="#">Delivery</a></li>
-            <li><a href="#">Returns</a></li>
-            <li><a href="#">Warranty</a></li>
-            <li><a href="#">Contact Us</a></li>
-            <li><a href="#">About</a></li>
-          </ul>
-        </div>
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand">Blue Leaf</div>
+        <p class="footer-tagline">Australia's most trusted online supplier for vanities, toilets, baths, tapware and tiles. Proudly Australian owned and operated.</p>
+        <p style="font-size:.75rem;color:rgba(212,197,169,.35)">5/9 Ladbroke St, Milperra NSW 2214<br>Mon–Fri 8:30am–4:30pm</p>
       </div>
-      <div class="footer-bottom">
-        <span class="footer-copy">© 2025 Blue Leaf Bathware & Tiles. All rights reserved.</span>
-        <span class="footer-note">Demo site — built as a portfolio concept</span>
-      </div>
+      <div class="footer-col"><div class="footer-col-title">Shop</div><ul><li><a href="#">Bathroom</a></li><li><a href="#">Kitchen & Laundry</a></li><li><a href="#">Vanities</a></li><li><a href="#">Fans & Lighting</a></li><li><a href="#">Clearance Sale</a></li></ul></div>
+      <div class="footer-col"><div class="footer-col-title">Brands</div><ul><li><a href="#">Caroma</a></li><li><a href="#">Phoenix</a></li><li><a href="#">Meir</a></li><li><a href="#">Nero Tapware</a></li><li><a href="#">All Brands</a></li></ul></div>
+      <div class="footer-col"><div class="footer-col-title">Help</div><ul><li><a href="#">Delivery</a></li><li><a href="#">Returns</a></li><li><a href="#">Warranty</a></li><li><a href="#">Contact Us</a></li><li><a href="#">About</a></li></ul></div>
     </div>
-  </footer>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2025 Blue Leaf Bathware & Tiles. All rights reserved.</span>
+      <span class="footer-note">Demo site — built as a portfolio concept</span>
+    </div>
+  </div>
+</footer>
 
-  <script>
-    // ── RESET SCROLL TO TOP ON RELOAD ──
-    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-    window.scrollTo(0, 0);
+<script>
+  // ── RESET ──
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
 
-    // ── CONFIG ──
-    const TOTAL_FRAMES = 280;
-    const FRAME_FOLDER = 'frames';
-    const FRAME_PREFIX = 'ezgif-frame-';
-    // frames named: ezgif-frame-001.webp ... ezgif-frame-280.webp
+  // ── CONFIG ──
+  const TOTAL_FRAMES = 280;
+  const FRAME_FOLDER = 'frames';
+  const FRAME_PREFIX = 'ezgif-frame-';
 
-    // ── CANVAS SETUP ──
-    const canvas = document.getElementById('hero-canvas');
-    const ctx = canvas.getContext('2d');
-    const frames = [];
-    let loadedCount = 0;
-    let currentFrame = 0;
-    let rafId = null;
+  // ── CANVAS ──
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+  const frames = [];
+  let loadedCount = 0;
+  let currentFrame = 0;
 
-    function resize() {
-      canvas.width  = window.innerWidth;
-      canvas.height = window.innerHeight;
-      if (frames[currentFrame]?.complete) drawFrame(currentFrame);
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    if (frames[currentFrame]?.complete) drawFrame(currentFrame);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function drawFrame(index) {
+    const img = frames[index];
+    if (!img || !img.complete || !img.naturalWidth) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const scale = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
+    const w = img.naturalWidth * scale;
+    const h = img.naturalHeight * scale;
+    ctx.drawImage(img, (canvas.width - w) / 2, (canvas.height - h) / 2, w, h);
+  }
+
+  // ── LOADER ──
+  const loaderEl  = document.getElementById('loader');
+  const loaderBar = document.getElementById('loader-bar');
+  const loaderPct = document.getElementById('loader-pct');
+  function pad(n) { return String(n).padStart(3, '0'); }
+
+  function loadFrames() {
+    for (let i = 1; i <= TOTAL_FRAMES; i++) {
+      const img = new Image();
+      img.src = `${FRAME_FOLDER}/${FRAME_PREFIX}${pad(i)}.webp`;
+      img.onload = () => {
+        loadedCount++;
+        const pct = Math.round((loadedCount / TOTAL_FRAMES) * 100);
+        loaderBar.style.width = pct + '%';
+        loaderPct.textContent = pct + '%';
+        if (i === 1) drawFrame(0);
+        if (loadedCount === TOTAL_FRAMES) setTimeout(() => loaderEl.classList.add('hidden'), 400);
+      };
+      img.onerror = () => { loadedCount++; };
+      frames[i - 1] = img;
     }
-    window.addEventListener('resize', resize);
-    resize();
+  }
 
-    function drawFrame(index) {
-      const img = frames[index];
-      if (!img || !img.complete || !img.naturalWidth) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const scale = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
-      const w = img.naturalWidth  * scale;
-      const h = img.naturalHeight * scale;
-      const x = (canvas.width  - w) / 2;
-      const y = (canvas.height - h) / 2;
-      ctx.drawImage(img, x, y, w, h);
-    }
+  // ── SCROLL DRIVER ──
+  let targetFrame = 0, displayFrame = 0;
 
-    // ── LOADER ──
-    const loaderEl  = document.getElementById('loader');
-    const loaderBar = document.getElementById('loader-bar');
-    const loaderPct = document.getElementById('loader-pct');
+  function getProgress(el) {
+    const rect = el.getBoundingClientRect();
+    const scrollable = el.offsetHeight - window.innerHeight;
+    return Math.max(0, Math.min(1, -rect.top / scrollable));
+  }
 
-    function pad(n, len) { return String(n).padStart(len, '0'); }
+  // ── TRUST BURST LOGIC ──
+  const trustWrap    = document.getElementById('trust-burst-wrap');
+  const trustPills   = document.querySelectorAll('.trust-icon-pill');
+  const trustHeadline = document.getElementById('trust-headline');
+  let trustTriggered = false;
 
-    function loadFrames() {
-      // Preload first frame immediately so hero isn't blank
-      const firstImg = new Image();
-      firstImg.src = `${FRAME_FOLDER}/${FRAME_PREFIX}${pad(1, 3)}.webp`;
-      firstImg.onload = () => { frames[0] = firstImg; drawFrame(0); };
-      frames[0] = firstImg;
+  function updateTrust(p) {
+    // p: 0→1 through the trust section
+    // Icons scatter out from 0.1→0.5, collapse back 0.8→1.0
+    const spreadIn  = Math.min(1, Math.max(0, (p - 0.08) / 0.25));
+    const collapseOut = Math.min(1, Math.max(0, (p - 0.78) / 0.18));
+    const show = spreadIn > 0 && collapseOut < 1;
 
-      for (let i = 1; i <= TOTAL_FRAMES; i++) {
-        const img = new Image();
-        img.src = `${FRAME_FOLDER}/${FRAME_PREFIX}${pad(i, 3)}.webp`;
-        img.onload = () => {
-          loadedCount++;
-          const pct = Math.round((loadedCount / TOTAL_FRAMES) * 100);
-          loaderBar.style.width = pct + '%';
-          loaderPct.textContent  = pct + '%';
-          if (loadedCount === TOTAL_FRAMES) {
-            setTimeout(() => { loaderEl.classList.add('hidden'); }, 400);
-          }
-        };
-        img.onerror = () => { loadedCount++; }; // skip missing frames gracefully
-        frames[i - 1] = img;
+    trustPills.forEach((pill, i) => {
+      if (spreadIn > 0 && collapseOut === 0) {
+        pill.classList.add('spread');
+      } else if (collapseOut > 0) {
+        // collapse: move back to center + fade
+        pill.style.opacity = 1 - collapseOut;
+        pill.style.transform = `translateY(${collapseOut * 80}px) scale(${1 - collapseOut * 0.4})`;
+      } else {
+        pill.classList.remove('spread');
+        pill.style.opacity = '';
+        pill.style.transform = '';
       }
+    });
+
+    // headline fades in with icons, fades out with collapse
+    const headlineOpacity = Math.min(spreadIn, 1 - collapseOut);
+    trustHeadline.style.opacity = headlineOpacity;
+  }
+
+  // ── COLLECTIONS LOGIC ──
+  const collWrap   = document.getElementById('collections-wrap');
+  const collHeader = document.getElementById('coll-header');
+  const collCards  = document.querySelectorAll('.coll-card');
+  let collTriggered = false;
+
+  function updateCollections(p) {
+    // header shows at p > 0.05
+    if (p > 0.05) collHeader.classList.add('show');
+    else collHeader.classList.remove('show');
+
+    // cards pop in one by one from p 0.1 to 0.7
+    collCards.forEach((card, i) => {
+      const threshold = 0.1 + (i / collCards.length) * 0.55;
+      if (p >= threshold) card.classList.add('pop');
+      else card.classList.remove('pop');
+    });
+  }
+
+  // ── MAIN SCROLL HANDLER ──
+  function onScroll() {
+    const scrollY = window.scrollY;
+
+    // NAV
+    document.getElementById('main-nav').classList.toggle('scrolled', scrollY > 80);
+
+    // HERO frames
+    const heroProgress = getProgress(document.getElementById('hero-wrap'));
+    targetFrame = Math.floor(heroProgress * (TOTAL_FRAMES - 1));
+    const fadeOut = Math.min(1, heroProgress * 4);
+    const heroContent = document.getElementById('hero-content');
+    heroContent.style.opacity = 1 - fadeOut;
+    heroContent.style.transform = `translateY(${fadeOut * -30}px)`;
+
+    // TRUST BURST
+    const trustProgress = getProgress(trustWrap);
+    updateTrust(trustProgress);
+
+    // COLLECTIONS
+    const collProgress = getProgress(collWrap);
+    updateCollections(collProgress);
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // ── RAF LOOP ──
+  function animLoop() {
+    if (Math.abs(displayFrame - targetFrame) > 0.4) {
+      displayFrame += (targetFrame - displayFrame) * 0.18;
+      const idx = Math.min(Math.round(displayFrame), TOTAL_FRAMES - 1);
+      if (idx !== currentFrame) { currentFrame = idx; drawFrame(currentFrame); }
     }
+    requestAnimationFrame(animLoop);
+  }
 
-    // ── SCROLL ANIMATION ──
-    let targetFrame = 0;
-    let displayFrame = 0;
+  // ── INTERSECTION OBSERVER ──
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }});
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.feature-card, .testi-card').forEach(el => observer.observe(el));
 
-    function getScrollProgress() {
-      const wrap = document.getElementById('hero-wrap');
-      const rect = wrap.getBoundingClientRect();
-      const scrollable = wrap.offsetHeight - window.innerHeight;
-      const scrolled = -rect.top;
-      return Math.max(0, Math.min(1, scrolled / scrollable));
-    }
-
-    function animLoop() {
-      // Smooth frame interpolation
-      if (Math.abs(displayFrame - targetFrame) > 0.5) {
-        displayFrame += (targetFrame - displayFrame) * 0.18;
-        const idx = Math.min(Math.round(displayFrame), TOTAL_FRAMES - 1);
-        if (idx !== currentFrame) {
-          currentFrame = idx;
-          drawFrame(currentFrame);
-        }
-      }
-      rafId = requestAnimationFrame(animLoop);
-    }
-
-    window.addEventListener('scroll', () => {
-      const progress = getScrollProgress();
-      targetFrame = Math.floor(progress * (TOTAL_FRAMES - 1));
-
-      // Fade hero text out as user scrolls
-      const heroContent = document.getElementById('hero-content');
-      const fadeOut = Math.min(1, progress * 4);
-      heroContent.style.opacity = 1 - fadeOut;
-      heroContent.style.transform = `translateY(${fadeOut * -30}px)`;
-
-      // Nav style
-      const nav = document.getElementById('main-nav');
-      if (window.scrollY > 80) nav.classList.add('scrolled');
-      else nav.classList.remove('scrolled');
-    }, { passive: true });
-
-    // ── INTERSECTION OBSERVER (scroll-reveal) ──
-    const revealEls = document.querySelectorAll('.feature-card, .cat-card, .testi-card');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          observer.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.15 });
-    revealEls.forEach(el => observer.observe(el));
-
-    // ── START ──
-    loadFrames();
-    animLoop();
-  </script>
+  loadFrames();
+  animLoop();
+</script>
 </body>
 </html>
