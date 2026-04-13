@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blue Leaf Bathware & Tiles — Premium Australian Bathware</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --stone:    #f5f0e8;
+      --warm:     #ede5d5;
+      --sand:     #d4c5a9;
+      --clay:     #b39c7d;
+      --bark:     #7a6148;
+      --earth:    #4a3728;
+      --charcoal: #1e1712;
+      --gold:     #c9a96e;
+      --gold-lt:  #e8d5b0;
+      --white:    #fdfaf5;
+      --ff-display: 'Cormorant Garamond', Georgia, serif;
+      --ff-body:    'Jost', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--stone);
+      color: var(--earth);
+      font-family: var(--ff-body);
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.4rem 3rem;
+      transition: background 0.4s, box-shadow 0.4s;
+    }
+    nav.scrolled {
+      background: rgba(245,240,232,0.92);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 1px 0 rgba(74,55,40,0.1);
+    }
+    .nav-logo {
+      font-family: var(--ff-display);
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: var(--white);
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      transition: color 0.4s;
+    }
+    nav.scrolled .nav-logo { color: var(--earth); }
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--ff-body);
+      font-size: 0.78rem;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(253,250,245,0.85);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    nav.scrolled .nav-links a { color: var(--bark); }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-cta {
+      font-family: var(--ff-body);
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--earth);
+      background: var(--gold);
+      padding: 0.55rem 1.4rem;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+    .nav-cta:hover { background: var(--clay); }
+
+    /* ── HERO ── */
+    .hero-wrap {
+      position: relative;
+      height: 600vh;
+    }
+    .hero-sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #hero-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(30,23,18,0.35) 0%,
+        rgba(30,23,18,0.1) 50%,
+        rgba(30,23,18,0.55) 100%
+      );
+    }
+    .hero-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .hero-eyebrow {
+      font-family: var(--ff-body);
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold-lt);
+      margin-bottom: 1.4rem;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 0.9s 0.3s forwards;
+    }
+    .hero-title {
+      font-family: var(--ff-display);
+      font-size: clamp(3rem, 7vw, 6.5rem);
+      font-weight: 300;
+      line-height: 1.06;
+      color: var(--white);
+      margin-bottom: 1.6rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 1s 0.55s forwards;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold-lt);
+    }
+    .hero-sub {
+      font-family: var(--ff-body);
+      font-size: 1rem;
+      font-weight: 300;
+      letter-spacing: 0.06em;
+      color: rgba(253,250,245,0.8);
+      max-width: 480px;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 1s 0.8s forwards;
+    }
+    .hero-btns {
+      display: flex;
+      gap: 1rem;
+      opacity: 0;
+      transform: translateY(14px);
+      animation: fadeUp 1s 1s forwards;
+    }
+    .btn-primary {
+      font-family: var(--ff-body);
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--earth);
+      background: var(--gold);
+      padding: 0.9rem 2.2rem;
+      text-decoration: none;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .btn-primary:hover { background: var(--gold-lt); transform: translateY(-1px); }
+    .btn-ghost {
+      font-family: var(--ff-body);
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--white);
+      background: transparent;
+      border: 1px solid rgba(253,250,245,0.45);
+      padding: 0.9rem 2.2rem;
+      text-decoration: none;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .btn-ghost:hover { border-color: var(--gold); background: rgba(201,169,110,0.12); }
+    .hero-scroll-hint {
+      position: absolute;
+      bottom: 2.2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      opacity: 0;
+      animation: fadeUp 1s 1.5s forwards;
+    }
+    .hero-scroll-hint span {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(253,250,245,0.55);
+    }
+    .scroll-line {
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, rgba(253,250,245,0.55), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    /* ── TRUST BAR ── */
+    .trust-bar {
+      background: var(--earth);
+      padding: 1.1rem 3rem;
+      display: flex;
+      justify-content: center;
+      gap: 4rem;
+      flex-wrap: wrap;
+    }
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .trust-icon {
+      width: 18px;
+      height: 18px;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+    .trust-item span {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--sand);
+    }
+
+    /* ── SECTION SHARED ── */
+    section { padding: 7rem 3rem; }
+    .section-eyebrow {
+      font-family: var(--ff-body);
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--clay);
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-family: var(--ff-display);
+      font-size: clamp(2.2rem, 4vw, 3.8rem);
+      font-weight: 300;
+      line-height: 1.12;
+      color: var(--earth);
+      margin-bottom: 1.4rem;
+    }
+    .section-title em { font-style: italic; color: var(--clay); }
+    .section-body {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: var(--bark);
+      max-width: 520px;
+    }
+
+    /* ── FEATURES ── */
+    .features { background: var(--white); }
+    .features-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    .feature-card {
+      padding: 2rem 1.6rem;
+      background: var(--stone);
+      border-top: 2px solid var(--gold);
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s, transform 0.6s;
+    }
+    .feature-card.visible { opacity: 1; transform: translateY(0); }
+    .feature-card:nth-child(2) { transition-delay: 0.1s; }
+    .feature-card:nth-child(3) { transition-delay: 0.2s; }
+    .feature-card:nth-child(4) { transition-delay: 0.3s; }
+    .feature-num {
+      font-family: var(--ff-display);
+      font-size: 2.2rem;
+      font-weight: 300;
+      color: var(--gold);
+      margin-bottom: 0.6rem;
+    }
+    .feature-name {
+      font-family: var(--ff-body);
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--earth);
+      margin-bottom: 0.5rem;
+    }
+    .feature-desc {
+      font-size: 0.85rem;
+      line-height: 1.7;
+      color: var(--bark);
+    }
+    .features-text { padding-right: 2rem; }
+    .features-divider {
+      width: 48px;
+      height: 1px;
+      background: var(--gold);
+      margin: 1.5rem 0;
+    }
+
+    /* ── CATEGORIES ── */
+    .categories { background: var(--warm); padding: 7rem 3rem; }
+    .categories-inner { max-width: 1200px; margin: 0 auto; }
+    .categories-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: auto auto;
+      gap: 1rem;
+    }
+    .cat-card {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      background: var(--sand);
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s, transform 0.6s;
+    }
+    .cat-card.visible { opacity: 1; transform: translateY(0); }
+    .cat-card:nth-child(1) { grid-column: span 2; grid-row: span 2; }
+    .cat-card:nth-child(2) { transition-delay: 0.08s; }
+    .cat-card:nth-child(3) { transition-delay: 0.16s; }
+    .cat-card:nth-child(4) { transition-delay: 0.24s; }
+    .cat-card:nth-child(5) { transition-delay: 0.32s; }
+    .cat-img {
+      width: 100%;
+      height: 100%;
+      min-height: 220px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s ease;
+      background: var(--sand);
+    }
+    .cat-card:first-child .cat-img { min-height: 460px; }
+    .cat-card:hover .cat-img { transform: scale(1.04); }
+    .cat-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(30,23,18,0.75) 0%, transparent 55%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1.6rem;
+      transition: background 0.4s;
+    }
+    .cat-card:hover .cat-overlay {
+      background: linear-gradient(to top, rgba(30,23,18,0.88) 0%, rgba(30,23,18,0.15) 55%);
+    }
+    .cat-label {
+      font-family: var(--ff-display);
+      font-size: 1.5rem;
+      font-weight: 300;
+      color: var(--white);
+      margin-bottom: 0.3rem;
+    }
+    .cat-card:first-child .cat-label { font-size: 2.2rem; }
+    .cat-count {
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gold-lt);
+    }
+    .cat-arrow {
+      position: absolute;
+      top: 1.4rem;
+      right: 1.4rem;
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(253,250,245,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s, background 0.3s;
+    }
+    .cat-card:hover .cat-arrow { opacity: 1; background: rgba(201,169,110,0.25); }
+    .cat-arrow svg { width: 14px; height: 14px; stroke: var(--white); }
+    .view-all-link {
+      font-size: 0.73rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--bark);
+      text-decoration: none;
+      border-bottom: 1px solid var(--clay);
+      padding-bottom: 2px;
+      transition: color 0.3s;
+    }
+    .view-all-link:hover { color: var(--earth); }
+
+    /* ── MARQUEE ── */
+    .marquee-strip {
+      background: var(--earth);
+      padding: 1rem 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .marquee-track {
+      display: inline-block;
+      animation: marquee 28s linear infinite;
+    }
+    .marquee-track span {
+      font-family: var(--ff-display);
+      font-size: 1.1rem;
+      font-style: italic;
+      font-weight: 300;
+      color: var(--sand);
+      padding: 0 2.5rem;
+    }
+    .marquee-track span.dot {
+      font-style: normal;
+      color: var(--gold);
+      padding: 0;
+      font-size: 0.6rem;
+    }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials { background: var(--stone); }
+    .testimonials-inner { max-width: 1100px; margin: 0 auto; }
+    .testi-header { text-align: center; margin-bottom: 4rem; }
+    .testi-header .section-body { margin: 0 auto; text-align: center; }
+    .testi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .testi-card {
+      background: var(--white);
+      padding: 2.2rem;
+      border-bottom: 2px solid var(--gold);
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s, transform 0.6s;
+    }
+    .testi-card.visible { opacity: 1; transform: translateY(0); }
+    .testi-card:nth-child(2) { transition-delay: 0.12s; }
+    .testi-card:nth-child(3) { transition-delay: 0.24s; }
+    .testi-stars {
+      display: flex;
+      gap: 3px;
+      margin-bottom: 1.2rem;
+    }
+    .testi-stars svg {
+      width: 13px;
+      height: 13px;
+      fill: var(--gold);
+    }
+    .testi-quote {
+      font-family: var(--ff-display);
+      font-size: 1.05rem;
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.65;
+      color: var(--earth);
+      margin-bottom: 1.5rem;
+    }
+    .testi-author {
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--clay);
+    }
+
+    /* ── CTA ── */
+    .cta-section {
+      background: var(--earth);
+      padding: 8rem 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(ellipse at 30% 50%, rgba(201,169,110,0.08) 0%, transparent 60%),
+                        radial-gradient(ellipse at 70% 50%, rgba(201,169,110,0.06) 0%, transparent 60%);
+    }
+    .cta-inner { position: relative; max-width: 680px; margin: 0 auto; }
+    .cta-eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.2rem;
+    }
+    .cta-title {
+      font-family: var(--ff-display);
+      font-size: clamp(2.4rem, 5vw, 4.2rem);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--white);
+      margin-bottom: 1.5rem;
+    }
+    .cta-title em { font-style: italic; color: var(--gold-lt); }
+    .cta-body {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: var(--sand);
+      margin-bottom: 2.8rem;
+    }
+    .cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-gold {
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--earth);
+      background: var(--gold);
+      padding: 1rem 2.6rem;
+      text-decoration: none;
+      transition: background 0.3s;
+      font-family: var(--ff-body);
+    }
+    .btn-gold:hover { background: var(--gold-lt); }
+    .btn-outline-lt {
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--sand);
+      background: transparent;
+      border: 1px solid rgba(212,197,169,0.35);
+      padding: 1rem 2.6rem;
+      text-decoration: none;
+      transition: border-color 0.3s, color 0.3s;
+      font-family: var(--ff-body);
+    }
+    .btn-outline-lt:hover { border-color: var(--gold); color: var(--white); }
+    .cta-stats {
+      display: flex;
+      justify-content: center;
+      gap: 4rem;
+      margin-top: 4rem;
+      padding-top: 3rem;
+      border-top: 1px solid rgba(212,197,169,0.15);
+      flex-wrap: wrap;
+    }
+    .cta-stat-num {
+      font-family: var(--ff-display);
+      font-size: 2.8rem;
+      font-weight: 300;
+      color: var(--gold-lt);
+      display: block;
+    }
+    .cta-stat-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--clay);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--charcoal);
+      padding: 4rem 3rem 2rem;
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+    .footer-brand {
+      font-family: var(--ff-display);
+      font-size: 1.6rem;
+      font-weight: 300;
+      color: var(--white);
+      margin-bottom: 1rem;
+    }
+    .footer-tagline {
+      font-size: 0.83rem;
+      line-height: 1.7;
+      color: rgba(212,197,169,0.55);
+      margin-bottom: 1.5rem;
+    }
+    .footer-col-title {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.2rem;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 0.6rem; }
+    .footer-col ul a {
+      font-size: 0.83rem;
+      color: rgba(212,197,169,0.55);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer-col ul a:hover { color: var(--sand); }
+    .footer-bottom {
+      border-top: 1px solid rgba(212,197,169,0.1);
+      padding-top: 1.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .footer-copy {
+      font-size: 0.75rem;
+      color: rgba(212,197,169,0.35);
+    }
+    .footer-note {
+      font-size: 0.7rem;
+      color: rgba(212,197,169,0.25);
+      font-style: italic;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.5; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(1.15); }
+    }
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ── LOADING SCREEN ── */
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: var(--earth);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.4rem;
+      transition: opacity 0.6s, visibility 0.6s;
+    }
+    #loader.hidden { opacity: 0; visibility: hidden; }
+    .loader-logo {
+      font-family: var(--ff-display);
+      font-size: 1.8rem;
+      font-weight: 300;
+      color: var(--white);
+      letter-spacing: 0.06em;
+    }
+    .loader-bar-wrap {
+      width: 200px;
+      height: 1px;
+      background: rgba(212,197,169,0.2);
+    }
+    .loader-bar {
+      height: 100%;
+      background: var(--gold);
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+    .loader-pct {
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      color: var(--clay);
+    }
+
+    /* ── PLACEHOLDER IMAGES ── */
+    .cat-placeholder {
+      width: 100%;
+      height: 100%;
+      min-height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--ff-display);
+      font-size: 0.9rem;
+      color: var(--bark);
+      letter-spacing: 0.08em;
+      background: var(--sand);
+    }
+    .cat-card:first-child .cat-placeholder { min-height: 460px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1.2rem 1.5rem; }
+      .nav-links { display: none; }
+      section { padding: 5rem 1.5rem; }
+      .features-inner { grid-template-columns: 1fr; gap: 3rem; }
+      .features-text { padding-right: 0; }
+      .cat-grid { grid-template-columns: 1fr 1fr; }
+      .cat-card:first-child { grid-column: span 2; }
+      .testi-grid { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      .trust-bar { gap: 2rem; }
+      .cta-stats { gap: 2.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="loader-logo">Blue Leaf</div>
+    <div class="loader-bar-wrap">
+      <div class="loader-bar" id="loader-bar"></div>
+    </div>
+    <div class="loader-pct" id="loader-pct">0%</div>
+  </div>
+
+  <!-- NAV -->
+  <nav id="main-nav">
+    <a href="#" class="nav-logo">Blue Leaf</a>
+    <ul class="nav-links">
+      <li><a href="#features">About</a></li>
+      <li><a href="#categories">Collections</a></li>
+      <li><a href="#testimonials">Reviews</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Shop Now</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero-wrap" id="hero-wrap">
+    <div class="hero-sticky">
+      <canvas id="hero-canvas"></canvas>
+      <div class="hero-overlay"></div>
+      <div class="hero-content" id="hero-content">
+        <p class="hero-eyebrow">Australia's Premium Bathware</p>
+        <h1 class="hero-title">Where <em>Luxury</em><br>Meets Function</h1>
+        <p class="hero-sub">Curated bathware, tiles & tapware from Australia's finest brands — designed for the way you live.</p>
+        <div class="hero-btns">
+          <a href="#categories" class="btn-primary">Explore Collections</a>
+          <a href="#contact" class="btn-ghost">Visit Showroom</a>
+        </div>
+      </div>
+      <div class="hero-scroll-hint">
+        <div class="scroll-line"></div>
+        <span>Scroll</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRUST BAR -->
+  <div class="trust-bar">
+    <div class="trust-item">
+      <svg class="trust-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12"/></svg>
+      <span>Free Delivery Over $150</span>
+    </div>
+    <div class="trust-item">
+      <svg class="trust-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+      <span>Voted Best Service</span>
+    </div>
+    <div class="trust-item">
+      <svg class="trust-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>
+      <span>Easy 30-Day Returns</span>
+    </div>
+    <div class="trust-item">
+      <svg class="trust-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+      <span>Proudly Australian</span>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
+    <div class="features-inner">
+      <div class="features-text">
+        <p class="section-eyebrow">Why Blue Leaf</p>
+        <h2 class="section-title">Crafted for the<br><em>Discerning Home</em></h2>
+        <div class="features-divider"></div>
+        <p class="section-body">For over a decade, Blue Leaf Bathware has been Australia's most trusted source for premium bathroom and kitchen products. We carry only what we believe in — every tap, basin and fitting hand-selected from the world's finest manufacturers.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-num">1,000+</div>
+          <div class="feature-name">In-Stock Products</div>
+          <div class="feature-desc">Australia's largest in-stock bathware collection, ready to ship.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-num">26+</div>
+          <div class="feature-name">Premium Brands</div>
+          <div class="feature-desc">Official retailer for Caroma, Phoenix, Meir, Nero and more.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-num">10yr</div>
+          <div class="feature-name">Warranty Support</div>
+          <div class="feature-desc">Full manufacturer warranties backed by our local team.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-num">5★</div>
+          <div class="feature-name">Customer Rating</div>
+          <div class="feature-desc">Voted best service by thousands of happy renovators.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-strip">
+    <div class="marquee-track" id="marquee-track">
+      <span>Caroma</span><span class="dot">◆</span>
+      <span>Phoenix</span><span class="dot">◆</span>
+      <span>Meir</span><span class="dot">◆</span>
+      <span>Nero Tapware</span><span class="dot">◆</span>
+      <span>Fienza</span><span class="dot">◆</span>
+      <span>Decina</span><span class="dot">◆</span>
+      <span>Abey</span><span class="dot">◆</span>
+      <span>Remer</span><span class="dot">◆</span>
+      <span>Timberline</span><span class="dot">◆</span>
+      <span>Oliveri</span><span class="dot">◆</span>
+      <span>Geberit</span><span class="dot">◆</span>
+      <span>Parisi</span><span class="dot">◆</span>
+      <span>Caroma</span><span class="dot">◆</span>
+      <span>Phoenix</span><span class="dot">◆</span>
+      <span>Meir</span><span class="dot">◆</span>
+      <span>Nero Tapware</span><span class="dot">◆</span>
+      <span>Fienza</span><span class="dot">◆</span>
+      <span>Decina</span><span class="dot">◆</span>
+      <span>Abey</span><span class="dot">◆</span>
+      <span>Remer</span><span class="dot">◆</span>
+      <span>Timberline</span><span class="dot">◆</span>
+      <span>Oliveri</span><span class="dot">◆</span>
+      <span>Geberit</span><span class="dot">◆</span>
+      <span>Parisi</span><span class="dot">◆</span>
+    </div>
+  </div>
+
+  <!-- CATEGORIES -->
+  <section class="categories" id="categories">
+    <div class="categories-inner">
+      <div class="categories-header">
+        <div>
+          <p class="section-eyebrow">Our Collections</p>
+          <h2 class="section-title">Shop by <em>Category</em></h2>
+        </div>
+        <a href="https://blueleafbath.com.au/collections/all-bathroom-products" class="view-all-link">View All Collections</a>
+      </div>
+      <div class="cat-grid">
+        <div class="cat-card">
+          <div class="cat-placeholder" style="background:#c9b99a;">Vanities & Cabinets</div>
+          <div class="cat-overlay">
+            <div class="cat-arrow">
+              <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg>
+            </div>
+            <div class="cat-label">Vanities & Cabinets</div>
+            <div class="cat-count">180+ Products</div>
+          </div>
+        </div>
+        <div class="cat-card">
+          <div class="cat-placeholder" style="background:#b5a58e; min-height:220px;">Tapware</div>
+          <div class="cat-overlay">
+            <div class="cat-arrow">
+              <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg>
+            </div>
+            <div class="cat-label">Tapware</div>
+            <div class="cat-count">320+ Products</div>
+          </div>
+        </div>
+        <div class="cat-card">
+          <div class="cat-placeholder" style="background:#a89680; min-height:220px;">Baths & Showers</div>
+          <div class="cat-overlay">
+            <div class="cat-arrow">
+              <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg>
+            </div>
+            <div class="cat-label">Baths & Showers</div>
+            <div class="cat-count">95+ Products</div>
+          </div>
+        </div>
+        <div class="cat-card">
+          <div class="cat-placeholder" style="background:#9d8b75; min-height:220px;">Toilets</div>
+          <div class="cat-overlay">
+            <div class="cat-arrow">
+              <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg>
+            </div>
+            <div class="cat-label">Toilets</div>
+            <div class="cat-count">75+ Products</div>
+          </div>
+        </div>
+        <div class="cat-card">
+          <div class="cat-placeholder" style="background:#8f7d68; min-height:220px;">LED Mirrors</div>
+          <div class="cat-overlay">
+            <div class="cat-arrow">
+              <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg>
+            </div>
+            <div class="cat-label">LED Mirrors</div>
+            <div class="cat-count">60+ Products</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials" id="testimonials">
+    <div class="testimonials-inner">
+      <div class="testi-header">
+        <p class="section-eyebrow">Customer Stories</p>
+        <h2 class="section-title">Loved by <em>Thousands</em></h2>
+        <p class="section-body">Real Australians, real renovations. Here's what they had to say about their Blue Leaf experience.</p>
+      </div>
+      <div class="testi-grid">
+        <div class="testi-card">
+          <div class="testi-stars">
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <p class="testi-quote">"The team at Blue Leaf are great. Competitive pricing, great knowledge and fantastic service. Everyone is raving about our bathroom."</p>
+          <div class="testi-author">Emily Thorne — Sydney, NSW</div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <p class="testi-quote">"Easy to place an order, great price, quality products and very quick delivery. We would highly recommend using Blue Leaf Bathware."</p>
+          <div class="testi-author">Ian Franks — Melbourne, VIC</div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <p class="testi-quote">"Ordered in the evening, received it before Christmas. Great communication, fast delivery, competitive prices and high quality products."</p>
+          <div class="testi-author">Nicholas Van Zanten — Brisbane, QLD</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section" id="contact">
+    <div class="cta-inner">
+      <p class="cta-eyebrow">Ready to Transform Your Space?</p>
+      <h2 class="cta-title">Your Dream Bathroom<br><em>Starts Here</em></h2>
+      <p class="cta-body">Visit our Sydney showroom or shop online. Our team of experts is ready to help you find the perfect products for your next renovation project.</p>
+      <div class="cta-btns">
+        <a href="https://blueleafbath.com.au" class="btn-gold">Shop Online</a>
+        <a href="https://g.page/Blue-Leaf-Bathware" class="btn-outline-lt">Find Showroom</a>
+      </div>
+      <div class="cta-stats">
+        <div>
+          <span class="cta-stat-num">1,000+</span>
+          <span class="cta-stat-label">Products in Stock</span>
+        </div>
+        <div>
+          <span class="cta-stat-num">26+</span>
+          <span class="cta-stat-label">Premium Brands</span>
+        </div>
+        <div>
+          <span class="cta-stat-num">10yr+</span>
+          <span class="cta-stat-label">Serving Australia</span>
+        </div>
+        <div>
+          <span class="cta-stat-num">5★</span>
+          <span class="cta-stat-label">Average Rating</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div>
+          <div class="footer-brand">Blue Leaf</div>
+          <p class="footer-tagline">Australia's most trusted online supplier for vanities, toilets, baths, tapware and tiles. Proudly Australian owned and operated.</p>
+          <p style="font-size:0.75rem; color: rgba(212,197,169,0.35);">5/9 Ladbroke St, Milperra NSW 2214<br>Mon–Fri 8:30am–4:30pm</p>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Shop</div>
+          <ul>
+            <li><a href="#">Bathroom</a></li>
+            <li><a href="#">Kitchen & Laundry</a></li>
+            <li><a href="#">Vanities</a></li>
+            <li><a href="#">Fans & Lighting</a></li>
+            <li><a href="#">Clearance Sale</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Brands</div>
+          <ul>
+            <li><a href="#">Caroma</a></li>
+            <li><a href="#">Phoenix</a></li>
+            <li><a href="#">Meir</a></li>
+            <li><a href="#">Nero Tapware</a></li>
+            <li><a href="#">All Brands</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Help</div>
+          <ul>
+            <li><a href="#">Delivery</a></li>
+            <li><a href="#">Returns</a></li>
+            <li><a href="#">Warranty</a></li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">About</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">© 2025 Blue Leaf Bathware & Tiles. All rights reserved.</span>
+        <span class="footer-note">Demo site — built as a portfolio concept</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── CONFIG ──
+    const TOTAL_FRAMES = 293;
+    const FRAME_FOLDER = 'frames'; // put your webp files in a /frames/ folder
+    const FRAME_PREFIX = 'ezgif-frame-';
+    // frames named: ezgif-frame-001.webp ... ezgif-frame-293.webp
+
+    // ── CANVAS SETUP ──
+    const canvas = document.getElementById('hero-canvas');
+    const ctx = canvas.getContext('2d');
+    const frames = [];
+    let loadedCount = 0;
+    let currentFrame = 0;
+    let rafId = null;
+
+    function resize() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+      if (frames[currentFrame]?.complete) drawFrame(currentFrame);
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    function drawFrame(index) {
+      const img = frames[index];
+      if (!img || !img.complete || !img.naturalWidth) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const scale = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
+      const w = img.naturalWidth  * scale;
+      const h = img.naturalHeight * scale;
+      const x = (canvas.width  - w) / 2;
+      const y = (canvas.height - h) / 2;
+      ctx.drawImage(img, x, y, w, h);
+    }
+
+    // ── LOADER ──
+    const loaderEl  = document.getElementById('loader');
+    const loaderBar = document.getElementById('loader-bar');
+    const loaderPct = document.getElementById('loader-pct');
+
+    function pad(n, len) { return String(n).padStart(len, '0'); }
+
+    function loadFrames() {
+      // Preload first frame immediately so hero isn't blank
+      const firstImg = new Image();
+      firstImg.src = `${FRAME_FOLDER}/${FRAME_PREFIX}${pad(1, 3)}.webp`;
+      firstImg.onload = () => { frames[0] = firstImg; drawFrame(0); };
+      frames[0] = firstImg;
+
+      for (let i = 1; i <= TOTAL_FRAMES; i++) {
+        const img = new Image();
+        img.src = `${FRAME_FOLDER}/${FRAME_PREFIX}${pad(i, 3)}.webp`;
+        img.onload = () => {
+          loadedCount++;
+          const pct = Math.round((loadedCount / TOTAL_FRAMES) * 100);
+          loaderBar.style.width = pct + '%';
+          loaderPct.textContent  = pct + '%';
+          if (loadedCount === TOTAL_FRAMES) {
+            setTimeout(() => { loaderEl.classList.add('hidden'); }, 400);
+          }
+        };
+        img.onerror = () => { loadedCount++; }; // skip missing frames gracefully
+        frames[i - 1] = img;
+      }
+    }
+
+    // ── SCROLL ANIMATION ──
+    let targetFrame = 0;
+    let displayFrame = 0;
+
+    function getScrollProgress() {
+      const wrap = document.getElementById('hero-wrap');
+      const rect = wrap.getBoundingClientRect();
+      const scrollable = wrap.offsetHeight - window.innerHeight;
+      const scrolled = -rect.top;
+      return Math.max(0, Math.min(1, scrolled / scrollable));
+    }
+
+    function animLoop() {
+      // Smooth frame interpolation
+      if (Math.abs(displayFrame - targetFrame) > 0.5) {
+        displayFrame += (targetFrame - displayFrame) * 0.18;
+        const idx = Math.min(Math.round(displayFrame), TOTAL_FRAMES - 1);
+        if (idx !== currentFrame) {
+          currentFrame = idx;
+          drawFrame(currentFrame);
+        }
+      }
+      rafId = requestAnimationFrame(animLoop);
+    }
+
+    window.addEventListener('scroll', () => {
+      const progress = getScrollProgress();
+      targetFrame = Math.floor(progress * (TOTAL_FRAMES - 1));
+
+      // Fade hero text out as user scrolls
+      const heroContent = document.getElementById('hero-content');
+      const fadeOut = Math.min(1, progress * 4);
+      heroContent.style.opacity = 1 - fadeOut;
+      heroContent.style.transform = `translateY(${fadeOut * -30}px)`;
+
+      // Nav style
+      const nav = document.getElementById('main-nav');
+      if (window.scrollY > 80) nav.classList.add('scrolled');
+      else nav.classList.remove('scrolled');
+    }, { passive: true });
+
+    // ── INTERSECTION OBSERVER (scroll-reveal) ──
+    const revealEls = document.querySelectorAll('.feature-card, .cat-card, .testi-card');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    revealEls.forEach(el => observer.observe(el));
+
+    // ── START ──
+    loadFrames();
+    animLoop();
+  </script>
+</body>
+</html>
