@@ -1065,11 +1065,15 @@
   </footer>
 
   <script>
+    // ── RESET SCROLL TO TOP ON RELOAD ──
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    window.scrollTo(0, 0);
+
     // ── CONFIG ──
-    const TOTAL_FRAMES = 293;
-    const FRAME_FOLDER = 'frames'; // put your webp files in a /frames/ folder
+    const TOTAL_FRAMES = 280;
+    const FRAME_FOLDER = 'frames';
     const FRAME_PREFIX = 'ezgif-frame-';
-    // frames named: ezgif-frame-001.webp ... ezgif-frame-293.webp
+    // frames named: ezgif-frame-001.webp ... ezgif-frame-280.webp
 
     // ── CANVAS SETUP ──
     const canvas = document.getElementById('hero-canvas');
