@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Blue Leaf Bathware & Tiles — Premium Australian Bathware</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
-    :root {
+    :root{
       --stone:#f5f0e8;--warm:#ede5d5;--sand:#d4c5a9;--clay:#b39c7d;
       --bark:#7a6148;--earth:#4a3728;--charcoal:#1e1712;
       --gold:#c9a96e;--gold-lt:#e8d5b0;--white:#fdfaf5;
@@ -17,363 +17,429 @@
     }
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
-    body{background:var(--stone);color:var(--earth);font-family:var(--ff-body);font-weight:300;overflow-x:hidden}
+    body{background:var(--charcoal);color:var(--white);font-family:var(--ff-body);font-weight:300;overflow-x:hidden}
 
-    /* NAV */
-    nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:1.4rem 3rem;transition:background .4s,box-shadow .4s}
-    nav.scrolled{background:rgba(245,240,232,.94);backdrop-filter:blur(14px);box-shadow:0 1px 0 rgba(74,55,40,.1)}
+    /* ───── LOADER ───── */
+    #loader{position:fixed;inset:0;background:var(--earth);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.4rem;transition:opacity .7s,visibility .7s}
+    #loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+    .loader-logo{font-family:var(--ff-display);font-size:2rem;font-weight:300;color:var(--white);letter-spacing:.06em}
+    .loader-bar-wrap{width:220px;height:1px;background:rgba(212,197,169,.2)}
+    .loader-bar{height:100%;background:var(--gold);width:0%;transition:width .08s linear}
+    .loader-pct{font-size:.68rem;letter-spacing:.2em;color:var(--clay)}
+
+    /* ───── NAV ───── */
+    nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:1.4rem 3rem;transition:background .4s,box-shadow .4s}
+    nav.scrolled{background:rgba(245,240,232,.95);backdrop-filter:blur(14px);box-shadow:0 1px 0 rgba(74,55,40,.1)}
     .nav-logo{font-family:var(--ff-display);font-size:1.5rem;font-weight:400;color:var(--white);letter-spacing:.04em;text-decoration:none;transition:color .4s}
     nav.scrolled .nav-logo{color:var(--earth)}
     .nav-links{display:flex;gap:2.5rem;list-style:none}
-    .nav-links a{font-size:.78rem;font-weight:400;letter-spacing:.14em;text-transform:uppercase;color:rgba(253,250,245,.85);text-decoration:none;transition:color .3s}
+    .nav-links a{font-size:.78rem;font-weight:400;letter-spacing:.14em;text-transform:uppercase;color:rgba(253,250,245,.8);text-decoration:none;transition:color .3s}
     nav.scrolled .nav-links a{color:var(--bark)}
     .nav-links a:hover{color:var(--gold)}
     .nav-cta{font-size:.75rem;font-weight:400;letter-spacing:.12em;text-transform:uppercase;color:var(--earth);background:var(--gold);padding:.55rem 1.4rem;text-decoration:none;transition:background .3s}
     .nav-cta:hover{background:var(--clay)}
 
-    /* LOADER */
-    #loader{position:fixed;inset:0;background:var(--earth);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.4rem;transition:opacity .7s,visibility .7s}
-    #loader.hidden{opacity:0;visibility:hidden}
-    .loader-logo{font-family:var(--ff-display);font-size:1.8rem;font-weight:300;color:var(--white);letter-spacing:.06em}
-    .loader-bar-wrap{width:200px;height:1px;background:rgba(212,197,169,.2)}
-    .loader-bar{height:100%;background:var(--gold);width:0%;transition:width .1s linear}
-    .loader-pct{font-size:.68rem;letter-spacing:.2em;color:var(--clay)}
-
-    /* HERO SCROLL WRAP */
-    .hero-wrap{position:relative;height:700vh}
+    /* ───── HERO SECTION ───── */
+    /* tall scroll container: 600vh = frames, extra 200vh = trust icon phase */
+    .hero-wrap{position:relative;height:800vh}
     .hero-sticky{position:sticky;top:0;height:100vh;overflow:hidden}
-    #hero-canvas{position:absolute;inset:0;width:100%;height:100%}
-    .hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(30,23,18,.38) 0%,rgba(30,23,18,.08) 50%,rgba(30,23,18,.6) 100%)}
 
-    /* HERO TEXT */
-    .hero-content{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;transition:opacity .25s,transform .25s}
-    .hero-eyebrow{font-size:.72rem;font-weight:400;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-lt);margin-bottom:1.4rem;opacity:0;transform:translateY(16px);animation:fadeUp .9s .3s forwards}
-    .hero-title{font-family:var(--ff-display);font-size:clamp(3rem,7vw,6.5rem);font-weight:300;line-height:1.06;color:var(--white);margin-bottom:1.6rem;opacity:0;transform:translateY(20px);animation:fadeUp 1s .55s forwards}
-    .hero-title em{font-style:italic;color:var(--gold-lt)}
-    .hero-sub{font-size:1rem;font-weight:300;letter-spacing:.06em;color:rgba(253,250,245,.8);max-width:480px;line-height:1.7;margin-bottom:2.5rem;opacity:0;transform:translateY(16px);animation:fadeUp 1s .8s forwards}
-    .hero-btns{display:flex;gap:1rem;opacity:0;transform:translateY(14px);animation:fadeUp 1s 1s forwards}
-    .btn-primary{font-size:.75rem;font-weight:400;letter-spacing:.14em;text-transform:uppercase;color:var(--earth);background:var(--gold);padding:.9rem 2.2rem;text-decoration:none;transition:background .3s,transform .2s;font-family:var(--ff-body)}
-    .btn-primary:hover{background:var(--gold-lt);transform:translateY(-2px)}
-    .btn-ghost{font-size:.75rem;font-weight:400;letter-spacing:.14em;text-transform:uppercase;color:var(--white);background:transparent;border:1px solid rgba(253,250,245,.45);padding:.9rem 2.2rem;text-decoration:none;transition:border-color .3s,background .3s;font-family:var(--ff-body)}
-    .btn-ghost:hover{border-color:var(--gold);background:rgba(201,169,110,.12)}
-    .hero-scroll-hint{position:absolute;bottom:2.2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;opacity:0;animation:fadeUp 1s 1.5s forwards;z-index:10}
-    .hero-scroll-hint span{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(253,250,245,.55)}
-    .scroll-line{width:1px;height:48px;background:linear-gradient(to bottom,rgba(253,250,245,.55),transparent);animation:scrollPulse 2s ease-in-out infinite}
+    /* CANVAS — drawn at device pixels, CSS fills viewport, NO blur */
+    #hero-canvas{
+      position:absolute;inset:0;
+      width:100%;height:100%;
+      display:block;
+    }
 
-    /* ── TRUST BURST SECTION ── */
-    .trust-burst-wrap{position:relative;height:180vh;background:var(--charcoal)}
-    .trust-burst-sticky{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center}
-    .trust-burst-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,rgba(201,169,110,.07) 0%,transparent 65%)}
+    /* Left-leaning dark gradient so left text stays readable */
+    .hero-overlay{
+      position:absolute;inset:0;pointer-events:none;
+      background:linear-gradient(105deg,rgba(8,5,3,.78) 0%,rgba(8,5,3,.42) 40%,rgba(8,5,3,.08) 100%);
+    }
 
-    /* trust icons container — starts collapsed at bottom center */
-    .trust-icons-row{
+    /* ── HERO TEXT — lower-left ── */
+    .hero-content{
       position:absolute;
-      bottom:14vh;
+      bottom:0;left:0;
+      padding:0 5vw 8vh;
+      display:flex;flex-direction:column;align-items:flex-start;
+      max-width:620px;
+      transition:opacity .2s,transform .2s;
+    }
+    .hero-eyebrow{
+      font-size:.7rem;font-weight:400;letter-spacing:.24em;text-transform:uppercase;
+      color:var(--gold);margin-bottom:1.1rem;
+      opacity:0;transform:translateY(16px);animation:fadeUp .9s .3s forwards;
+    }
+    .hero-title{
+      font-family:var(--ff-display);
+      font-size:clamp(2.6rem,6vw,5.6rem);
+      font-weight:300;line-height:1.06;color:var(--white);
+      margin-bottom:1.1rem;text-align:left;
+      opacity:0;transform:translateY(20px);animation:fadeUp 1s .55s forwards;
+    }
+    .hero-title em{font-style:italic;color:var(--gold-lt)}
+    .hero-sub{
+      font-size:.92rem;font-weight:300;letter-spacing:.04em;
+      color:rgba(253,250,245,.72);max-width:400px;line-height:1.78;
+      margin-bottom:2rem;text-align:left;
+      opacity:0;transform:translateY(16px);animation:fadeUp 1s .8s forwards;
+    }
+    .hero-btns{
+      display:flex;gap:.9rem;flex-wrap:wrap;
+      opacity:0;transform:translateY(14px);animation:fadeUp 1s 1s forwards;
+    }
+    .btn-primary{
+      font-family:var(--ff-body);font-size:.72rem;font-weight:400;
+      letter-spacing:.14em;text-transform:uppercase;
+      color:var(--earth);background:var(--gold);
+      padding:.85rem 2rem;text-decoration:none;
+      transition:background .3s,transform .2s;
+    }
+    .btn-primary:hover{background:var(--gold-lt);transform:translateY(-2px)}
+    .btn-ghost{
+      font-family:var(--ff-body);font-size:.72rem;font-weight:400;
+      letter-spacing:.14em;text-transform:uppercase;
+      color:var(--white);background:transparent;
+      border:1px solid rgba(253,250,245,.38);
+      padding:.85rem 2rem;text-decoration:none;
+      transition:border-color .3s,background .3s;
+    }
+    .btn-ghost:hover{border-color:var(--gold);background:rgba(201,169,110,.1)}
+
+    /* Scroll hint — right side */
+    .hero-scroll-hint{
+      position:absolute;bottom:2.5rem;right:3rem;
+      display:flex;flex-direction:column;align-items:center;gap:.5rem;
+      opacity:0;animation:fadeUp 1s 1.6s forwards;z-index:10;
+    }
+    .hero-scroll-hint span{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(253,250,245,.4)}
+    .scroll-line{width:1px;height:44px;background:linear-gradient(to bottom,rgba(253,250,245,.4),transparent);animation:scrollPulse 2s ease-in-out infinite}
+
+    /* ───── TRUST ICONS — INSIDE hero-sticky, above canvas ───── */
+    /* Pinned to bottom-center of the hero viewport */
+    .trust-row{
+      position:absolute;
+      bottom:9vh;
       left:50%;
       transform:translateX(-50%);
+      z-index:30;
       display:flex;
-      gap:0;
       align-items:flex-end;
-      z-index:10;
+      gap:0;
+      pointer-events:none;
     }
-    .trust-icon-pill{
-      display:flex;flex-direction:column;align-items:center;gap:.9rem;
+
+    /* Each pill starts stacked at origin (bottom center), width:0 collapsed */
+    .trust-pill{
+      display:flex;flex-direction:column;align-items:center;gap:.8rem;
       opacity:0;
-      transform:translateY(80px) scale(.6);
-      transition:opacity .55s cubic-bezier(.22,1,.36,1), transform .55s cubic-bezier(.22,1,.36,1), gap .6s ease;
+      transform:translateY(100px) scale(.3);
+      transition:
+        opacity   .55s cubic-bezier(.22,1,.36,1),
+        transform .55s cubic-bezier(.22,1,.36,1),
+        margin    .55s cubic-bezier(.22,1,.36,1);
       width:0;overflow:hidden;
       pointer-events:none;
     }
-    .trust-icon-pill.spread{
-      opacity:1;transform:translateY(0) scale(1);
-      width:160px;pointer-events:auto;
+    /* When .show — pills fan out like a reverse triangle from center */
+    .trust-pill.show{
+      opacity:1;
+      width:140px;
+      pointer-events:auto;
+      overflow:visible;
     }
-    .trust-icon-pill.spread:nth-child(1){transition-delay:.05s;transform:translateY(0) scale(1) translateX(-12px)}
-    .trust-icon-pill.spread:nth-child(2){transition-delay:.15s}
-    .trust-icon-pill.spread:nth-child(3){transition-delay:.25s}
-    .trust-icon-pill.spread:nth-child(4){transition-delay:.35s;transform:translateY(0) scale(1) translateX(12px)}
+    /* pill 1 & 4 (outer) start slightly lower = reverse-triangle shape */
+    .trust-pill.show:nth-child(1){ transform:translateY(18px) scale(1); transition-delay:.04s; margin:0 8px }
+    .trust-pill.show:nth-child(2){ transform:translateY(0px)  scale(1); transition-delay:.14s; margin:0 8px }
+    .trust-pill.show:nth-child(3){ transform:translateY(0px)  scale(1); transition-delay:.24s; margin:0 8px }
+    .trust-pill.show:nth-child(4){ transform:translateY(18px) scale(1); transition-delay:.34s; margin:0 8px }
 
-    .trust-icon-circle{
-      width:88px;height:88px;border-radius:50%;
-      border:1px solid rgba(201,169,110,.35);
-      background:rgba(201,169,110,.06);
+    .trust-circle{
+      width:86px;height:86px;border-radius:50%;
+      background:rgba(8,5,3,.55);
+      backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+      border:1px solid rgba(201,169,110,.28);
       display:flex;align-items:center;justify-content:center;
       position:relative;
-      transition:border-color .3s,background .3s,transform .3s,box-shadow .3s;
-      cursor:default;
+      transition:border-color .35s,background .35s,transform .35s,box-shadow .35s;
     }
-    .trust-icon-circle::before{
-      content:'';position:absolute;inset:-6px;border-radius:50%;
-      border:1px solid rgba(201,169,110,0);
-      transition:border-color .4s,inset .4s;
-    }
-    .trust-icon-pill:hover .trust-icon-circle{
-      background:rgba(201,169,110,.15);
-      border-color:var(--gold);
-      transform:translateY(-6px) scale(1.06);
-      box-shadow:0 12px 40px rgba(201,169,110,.2);
-    }
-    .trust-icon-pill:hover .trust-icon-circle::before{
-      border-color:rgba(201,169,110,.25);inset:-12px;
-    }
-    .trust-icon-circle svg{width:34px;height:34px;stroke:var(--gold);stroke-width:1.3;fill:none}
-    .trust-icon-label{
-      font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;
-      color:var(--sand);text-align:center;line-height:1.5;
-      transition:color .3s;
-      width:120px;
-    }
-    .trust-icon-pill:hover .trust-icon-label{color:var(--gold-lt)}
-
-    /* trust headline */
-    .trust-headline{
-      position:absolute;top:50%;left:50%;
-      transform:translate(-50%,-50%);
-      text-align:center;
-      opacity:0;transition:opacity .7s .2s;
+    /* animated pulse ring */
+    .trust-circle::after{
+      content:'';position:absolute;inset:0;border-radius:50%;
+      border:1px solid rgba(201,169,110,.28);
+      animation:pulseRing 2.8s ease-out infinite;
       pointer-events:none;
     }
-    .trust-headline.show{opacity:1}
-    .trust-headline h2{font-family:var(--ff-display);font-size:clamp(2.4rem,5vw,4.5rem);font-weight:300;color:var(--white);line-height:1.1;margin-bottom:.8rem}
-    .trust-headline h2 em{font-style:italic;color:var(--gold-lt)}
-    .trust-headline p{font-size:.85rem;letter-spacing:.08em;color:var(--sand)}
+    .trust-pill:nth-child(1) .trust-circle::after{animation-delay:0s}
+    .trust-pill:nth-child(2) .trust-circle::after{animation-delay:.7s}
+    .trust-pill:nth-child(3) .trust-circle::after{animation-delay:1.4s}
+    .trust-pill:nth-child(4) .trust-circle::after{animation-delay:2.1s}
 
-    /* ── COLLECTIONS SECTION ── */
-    .collections-wrap{position:relative;height:300vh;background:var(--charcoal)}
-    .collections-sticky{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem 4rem}
-    .collections-header{text-align:center;margin-bottom:2.5rem;opacity:0;transform:translateY(24px);transition:opacity .7s,transform .7s}
+    .trust-pill:hover .trust-circle{
+      background:rgba(201,169,110,.16);
+      border-color:var(--gold);
+      transform:translateY(-10px) scale(1.09);
+      box-shadow:0 20px 56px rgba(201,169,110,.28),0 0 0 1px rgba(201,169,110,.22);
+    }
+    .trust-circle svg{width:30px;height:30px;stroke:var(--gold);stroke-width:1.4;fill:none}
+    .trust-label{
+      font-family:var(--ff-body);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;
+      color:rgba(212,197,169,.7);text-align:center;line-height:1.6;
+      width:120px;transition:color .3s;
+    }
+    .trust-pill:hover .trust-label{color:var(--gold-lt)}
+
+    /* ───── COLLECTIONS SECTION ───── */
+    .collections-section{
+      background:var(--charcoal);
+      padding:7rem 3rem 8rem;
+    }
+    .collections-inner{max-width:1400px;margin:0 auto}
+    .collections-header{
+      text-align:center;margin-bottom:4rem;
+      opacity:0;transform:translateY(24px);
+      transition:opacity .7s,transform .7s;
+    }
     .collections-header.show{opacity:1;transform:translateY(0)}
-    .collections-eyebrow{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:.7rem}
-    .collections-title{font-family:var(--ff-display);font-size:clamp(1.8rem,3.5vw,3rem);font-weight:300;color:var(--white);line-height:1.1}
-    .collections-title em{font-style:italic;color:var(--gold-lt)}
+    .coll-eyebrow{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:.8rem}
+    .coll-title{font-family:var(--ff-display);font-size:clamp(2rem,4vw,3.4rem);font-weight:300;color:var(--white);line-height:1.1}
+    .coll-title em{font-style:italic;color:var(--gold-lt)}
 
-    /* 3×4 grid — 3 cols, 4 rows, fits one screen */
+    /* 4 columns × 3 rows = 12 portrait cards */
     .coll-grid{
       display:grid;
-      grid-template-columns:repeat(3,1fr);
-      grid-template-rows:repeat(4,1fr);
+      grid-template-columns:repeat(4,1fr);
       gap:1rem;
-      width:100%;
-      max-width:1100px;
-      height:calc(100vh - 200px);
-      max-height:580px;
     }
+
+    /* 9:16 portrait ratio */
     .coll-card{
       position:relative;overflow:hidden;cursor:pointer;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(201,169,110,.12);
+      aspect-ratio:9/16;
+      border:1px solid rgba(201,169,110,.1);
+      transition:border-color .4s,box-shadow .4s,transform .4s;
       opacity:0;
-      transform:translateY(40px) scale(.96);
+      transform:translateY(50px) scale(.96);
       transition:
-        opacity .6s cubic-bezier(.22,1,.36,1),
-        transform .6s cubic-bezier(.22,1,.36,1),
+        opacity .65s cubic-bezier(.22,1,.36,1),
+        transform .65s cubic-bezier(.22,1,.36,1),
         border-color .3s,
-        box-shadow .4s;
+        box-shadow .3s;
     }
     .coll-card.pop{opacity:1;transform:translateY(0) scale(1)}
-    /* staggered delays */
-    .coll-card:nth-child(1){transition-delay:.00s}
-    .coll-card:nth-child(2){transition-delay:.07s}
-    .coll-card:nth-child(3){transition-delay:.14s}
-    .coll-card:nth-child(4){transition-delay:.21s}
-    .coll-card:nth-child(5){transition-delay:.28s}
-    .coll-card:nth-child(6){transition-delay:.35s}
-    .coll-card:nth-child(7){transition-delay:.42s}
-    .coll-card:nth-child(8){transition-delay:.49s}
-    .coll-card:nth-child(9){transition-delay:.56s}
-    .coll-card:nth-child(10){transition-delay:.63s}
-    .coll-card:nth-child(11){transition-delay:.70s}
-    .coll-card:nth-child(12){transition-delay:.77s}
 
-    /* hover glow border */
+    /* stagger delays for each card */
+    .coll-card:nth-child(1){transition-delay:.00s}
+    .coll-card:nth-child(2){transition-delay:.06s}
+    .coll-card:nth-child(3){transition-delay:.12s}
+    .coll-card:nth-child(4){transition-delay:.18s}
+    .coll-card:nth-child(5){transition-delay:.24s}
+    .coll-card:nth-child(6){transition-delay:.30s}
+    .coll-card:nth-child(7){transition-delay:.36s}
+    .coll-card:nth-child(8){transition-delay:.42s}
+    .coll-card:nth-child(9){transition-delay:.48s}
+    .coll-card:nth-child(10){transition-delay:.54s}
+    .coll-card:nth-child(11){transition-delay:.60s}
+    .coll-card:nth-child(12){transition-delay:.66s}
+
     .coll-card:hover{
       border-color:rgba(201,169,110,.55);
-      box-shadow:0 0 0 1px rgba(201,169,110,.2),0 16px 48px rgba(0,0,0,.4),inset 0 0 40px rgba(201,169,110,.04);
+      box-shadow:0 0 0 1px rgba(201,169,110,.18),0 24px 60px rgba(0,0,0,.5);
+      transform:translateY(-5px) scale(1.015) !important;
       z-index:2;
     }
 
-    /* inner shimmer on hover */
-    .coll-card::before{
-      content:'';position:absolute;inset:0;
-      background:linear-gradient(135deg,rgba(201,169,110,0) 40%,rgba(201,169,110,.08) 100%);
-      opacity:0;transition:opacity .4s;z-index:1;
-    }
-    .coll-card:hover::before{opacity:1}
-
-    /* moving shine sweep */
-    .coll-card::after{
-      content:'';position:absolute;top:-100%;left:-60%;
-      width:40%;height:300%;
-      background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.06) 50%,transparent 60%);
-      transform:skewX(-15deg);
-      transition:left .6s ease,top .6s ease;
-      z-index:2;pointer-events:none;
-    }
-    .coll-card:hover::after{left:140%;top:-100%}
-
+    /* rich background gradient per card */
     .coll-bg{
       position:absolute;inset:0;
-      display:flex;align-items:center;justify-content:center;
-      transition:transform .5s cubic-bezier(.22,1,.36,1);
+      transition:transform .55s cubic-bezier(.22,1,.36,1);
     }
-    .coll-card:hover .coll-bg{transform:scale(1.06)}
+    .coll-card:hover .coll-bg{transform:scale(1.07)}
 
-    /* color-coded category backgrounds */
-    .coll-card:nth-child(1) .coll-bg{background:linear-gradient(135deg,#3a2e24 0%,#5a4535 100%)}
-    .coll-card:nth-child(2) .coll-bg{background:linear-gradient(135deg,#2e2a20 0%,#4a4030 100%)}
-    .coll-card:nth-child(3) .coll-bg{background:linear-gradient(135deg,#332820 0%,#4e3828 100%)}
-    .coll-card:nth-child(4) .coll-bg{background:linear-gradient(135deg,#26201a 0%,#3e3028 100%)}
-    .coll-card:nth-child(5) .coll-bg{background:linear-gradient(135deg,#2a2820 0%,#443e2c 100%)}
-    .coll-card:nth-child(6) .coll-bg{background:linear-gradient(135deg,#1e2224 0%,#303840 100%)}
-    .coll-card:nth-child(7) .coll-bg{background:linear-gradient(135deg,#221e28 0%,#38303e 100%)}
-    .coll-card:nth-child(8) .coll-bg{background:linear-gradient(135deg,#1e2820 0%,#2e3e30 100%)}
-    .coll-card:nth-child(9) .coll-bg{background:linear-gradient(135deg,#28201e 0%,#40302e 100%)}
-    .coll-card:nth-child(10) .coll-bg{background:linear-gradient(135deg,#201e28 0%,#302e40 100%)}
-    .coll-card:nth-child(11) .coll-bg{background:linear-gradient(135deg,#281e20 0%,#402e32 100%)}
-    .coll-card:nth-child(12) .coll-bg{background:linear-gradient(135deg,#202820 0%,#304030 100%)}
+    .coll-card:nth-child(1)  .coll-bg{background:linear-gradient(160deg,#3d2e22 0%,#6b4e38 60%,#4a3728 100%)}
+    .coll-card:nth-child(2)  .coll-bg{background:linear-gradient(160deg,#2a2820 0%,#4a4230 60%,#2e2a1e 100%)}
+    .coll-card:nth-child(3)  .coll-bg{background:linear-gradient(160deg,#1e2a2c 0%,#2e4248 60%,#1a2428 100%)}
+    .coll-card:nth-child(4)  .coll-bg{background:linear-gradient(160deg,#28201e 0%,#483630 60%,#2a201a 100%)}
+    .coll-card:nth-child(5)  .coll-bg{background:linear-gradient(160deg,#222030 0%,#3a3452 60%,#1e1c2a 100%)}
+    .coll-card:nth-child(6)  .coll-bg{background:linear-gradient(160deg,#1e2c20 0%,#304838 60%,#1a2820 100%)}
+    .coll-card:nth-child(7)  .coll-bg{background:linear-gradient(160deg,#2c2018 0%,#503c2a 60%,#2a1e14 100%)}
+    .coll-card:nth-child(8)  .coll-bg{background:linear-gradient(160deg,#1e1e2e 0%,#32324e 60%,#1a1a28 100%)}
+    .coll-card:nth-child(9)  .coll-bg{background:linear-gradient(160deg,#281e1e 0%,#483030 60%,#221818 100%)}
+    .coll-card:nth-child(10) .coll-bg{background:linear-gradient(160deg,#20281e 0%,#364434 60%,#1c2418 100%)}
+    .coll-card:nth-child(11) .coll-bg{background:linear-gradient(160deg,#28221a 0%,#4a3e2c 60%,#221c16 100%)}
+    .coll-card:nth-child(12) .coll-bg{background:linear-gradient(160deg,#1e2022 0%,#30363a 60%,#18191c 100%)}
 
+    /* gold geometric accent top-right */
+    .coll-accent{
+      position:absolute;top:0;right:0;
+      width:60px;height:60px;
+      background:linear-gradient(135deg,transparent 50%,rgba(201,169,110,.12) 50%);
+      transition:opacity .4s;
+    }
+    .coll-card:hover .coll-accent{opacity:0}
+
+    /* shine sweep on hover */
+    .coll-card::after{
+      content:'';position:absolute;
+      top:-120%;left:-60%;
+      width:35%;height:340%;
+      background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.055) 50%,transparent 60%);
+      transform:skewX(-12deg);
+      transition:left .65s ease,top .65s ease;
+      pointer-events:none;z-index:5;
+    }
+    .coll-card:hover::after{left:130%;top:-120%}
+
+    /* category icon — top-left */
     .coll-icon{
-      width:38px;height:38px;stroke:rgba(201,169,110,.5);stroke-width:1.2;fill:none;
-      position:absolute;top:1rem;left:1rem;
-      transition:stroke .3s,transform .35s;
+      position:absolute;top:1.1rem;left:1.1rem;
+      width:34px;height:34px;
+      stroke:rgba(201,169,110,.45);stroke-width:1.2;fill:none;
+      transition:stroke .35s,transform .4s;z-index:4;
     }
-    .coll-card:hover .coll-icon{stroke:var(--gold);transform:scale(1.15) rotate(-5deg)}
+    .coll-card:hover .coll-icon{stroke:var(--gold);transform:scale(1.18) rotate(-6deg)}
 
+    /* bottom content */
     .coll-content{
       position:absolute;inset:0;
       display:flex;flex-direction:column;justify-content:flex-end;
-      padding:1rem 1.1rem;
-      background:linear-gradient(to top,rgba(10,7,5,.85) 0%,transparent 60%);
+      padding:1.4rem 1.2rem 1.3rem;
+      background:linear-gradient(to top,rgba(5,3,2,.92) 0%,rgba(5,3,2,.4) 45%,transparent 70%);
       z-index:3;
     }
     .coll-name{
-      font-family:var(--ff-display);font-size:1rem;font-weight:300;
-      color:var(--white);line-height:1.2;margin-bottom:.25rem;
-      transform:translateY(6px);transition:transform .35s;
+      font-family:var(--ff-display);font-size:1.05rem;font-weight:300;
+      color:var(--white);line-height:1.25;margin-bottom:.3rem;
+      transform:translateY(6px);transition:transform .38s;
     }
     .coll-card:hover .coll-name{transform:translateY(-2px)}
     .coll-count{
-      font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;
-      color:var(--gold);opacity:.8;
-      transform:translateY(8px);opacity:0;
-      transition:transform .35s .05s,opacity .35s .05s;
+      font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;
+      color:var(--gold);
+      opacity:0;transform:translateY(10px);
+      transition:opacity .35s .06s,transform .35s .06s;
     }
-    .coll-card:hover .coll-count{transform:translateY(0);opacity:1}
+    .coll-card:hover .coll-count{opacity:1;transform:translateY(0)}
+
+    /* arrow top-right */
     .coll-arrow{
-      position:absolute;top:.9rem;right:.9rem;
-      width:28px;height:28px;border-radius:50%;
-      border:1px solid rgba(201,169,110,0);
+      position:absolute;top:1rem;right:1rem;
+      width:30px;height:30px;border-radius:50%;
+      border:1px solid transparent;
       display:flex;align-items:center;justify-content:center;
-      opacity:0;transform:scale(.7);
+      opacity:0;transform:scale(.5) rotate(-45deg);
       transition:opacity .3s,transform .3s,border-color .3s,background .3s;
-      z-index:4;
+      z-index:6;
     }
-    .coll-card:hover .coll-arrow{opacity:1;transform:scale(1);border-color:rgba(201,169,110,.5);background:rgba(201,169,110,.1)}
-    .coll-arrow svg{width:12px;height:12px;stroke:var(--gold);fill:none}
+    .coll-arrow svg{width:13px;height:13px;stroke:var(--gold);fill:none;stroke-width:1.8}
+    .coll-card:hover .coll-arrow{
+      opacity:1;transform:scale(1) rotate(0deg);
+      border-color:rgba(201,169,110,.45);
+      background:rgba(201,169,110,.1);
+    }
 
-    /* ── REST OF SITE ── */
-    section{padding:7rem 3rem}
-    .section-eyebrow{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--clay);margin-bottom:1rem}
-    .section-title{font-family:var(--ff-display);font-size:clamp(2.2rem,4vw,3.8rem);font-weight:300;line-height:1.12;color:var(--earth);margin-bottom:1.4rem}
-    .section-title em{font-style:italic;color:var(--clay)}
-    .section-body{font-size:.95rem;line-height:1.8;color:var(--bark);max-width:520px}
-
-    /* FEATURES */
-    .features{background:var(--white)}
+    /* ───── REST OF PAGE ───── */
+    .features-section{background:var(--stone);padding:7rem 3rem}
     .features-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
-    .features-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
-    .feature-card{padding:2rem 1.6rem;background:var(--stone);border-top:2px solid var(--gold);opacity:0;transform:translateY(30px);transition:opacity .6s,transform .6s,box-shadow .3s}
+    .features-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.8rem}
+    .feature-card{
+      padding:2rem 1.6rem;background:var(--warm);border-top:2px solid var(--gold);
+      opacity:0;transform:translateY(28px);
+      transition:opacity .6s,transform .6s,box-shadow .3s;
+    }
     .feature-card.visible{opacity:1;transform:translateY(0)}
-    .feature-card:hover{box-shadow:0 8px 32px rgba(74,55,40,.1);transform:translateY(-3px)}
     .feature-card:nth-child(2){transition-delay:.1s}
     .feature-card:nth-child(3){transition-delay:.2s}
     .feature-card:nth-child(4){transition-delay:.3s}
-    .feature-num{font-family:var(--ff-display);font-size:2.2rem;font-weight:300;color:var(--gold);margin-bottom:.6rem}
-    .feature-name{font-size:.78rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--earth);margin-bottom:.5rem}
-    .feature-desc{font-size:.85rem;line-height:1.7;color:var(--bark)}
+    .feature-card:hover{box-shadow:0 10px 36px rgba(74,55,40,.12);transform:translateY(-3px)}
+    .feature-num{font-family:var(--ff-display);font-size:2.2rem;font-weight:300;color:var(--gold);margin-bottom:.5rem}
+    .feature-name{font-size:.76rem;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:var(--earth);margin-bottom:.45rem}
+    .feature-desc{font-size:.84rem;line-height:1.7;color:var(--bark)}
     .features-text{padding-right:2rem}
-    .features-divider{width:48px;height:1px;background:var(--gold);margin:1.5rem 0}
+    .sec-eyebrow{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--clay);margin-bottom:.9rem}
+    .sec-title{font-family:var(--ff-display);font-size:clamp(2.2rem,4vw,3.6rem);font-weight:300;line-height:1.12;color:var(--earth);margin-bottom:1.3rem}
+    .sec-title em{font-style:italic;color:var(--clay)}
+    .sec-body{font-size:.93rem;line-height:1.82;color:var(--bark);max-width:500px}
+    .sec-divider{width:44px;height:1px;background:var(--gold);margin:1.4rem 0}
 
-    /* MARQUEE */
     .marquee-strip{background:var(--earth);padding:1rem 0;overflow:hidden;white-space:nowrap}
     .marquee-track{display:inline-block;animation:marquee 28s linear infinite}
-    .marquee-track span{font-family:var(--ff-display);font-size:1.1rem;font-style:italic;font-weight:300;color:var(--sand);padding:0 2.5rem}
-    .marquee-track span.dot{font-style:normal;color:var(--gold);padding:0;font-size:.6rem}
+    .marquee-track span{font-family:var(--ff-display);font-size:1.05rem;font-style:italic;font-weight:300;color:var(--sand);padding:0 2.4rem}
+    .marquee-track span.dot{font-style:normal;color:var(--gold);padding:0;font-size:.55rem}
 
-    /* TESTIMONIALS */
-    .testimonials{background:var(--stone)}
-    .testimonials-inner{max-width:1100px;margin:0 auto}
+    .testi-section{background:var(--stone);padding:7rem 3rem}
+    .testi-inner{max-width:1100px;margin:0 auto}
     .testi-header{text-align:center;margin-bottom:4rem}
-    .testi-header .section-body{margin:0 auto;text-align:center}
-    .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
-    .testi-card{background:var(--white);padding:2.2rem;border-bottom:2px solid var(--gold);opacity:0;transform:translateY(24px);transition:opacity .6s,transform .6s,box-shadow .3s}
+    .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem}
+    .testi-card{
+      background:var(--white);padding:2.2rem;border-bottom:2px solid var(--gold);
+      opacity:0;transform:translateY(22px);
+      transition:opacity .6s,transform .6s,box-shadow .3s;
+    }
     .testi-card.visible{opacity:1;transform:translateY(0)}
-    .testi-card:hover{box-shadow:0 12px 40px rgba(74,55,40,.12);transform:translateY(-4px)}
     .testi-card:nth-child(2){transition-delay:.12s}
     .testi-card:nth-child(3){transition-delay:.24s}
+    .testi-card:hover{box-shadow:0 14px 44px rgba(74,55,40,.13);transform:translateY(-5px)}
     .testi-stars{display:flex;gap:3px;margin-bottom:1.2rem}
     .testi-stars svg{width:13px;height:13px;fill:var(--gold)}
-    .testi-quote{font-family:var(--ff-display);font-size:1.05rem;font-weight:300;font-style:italic;line-height:1.65;color:var(--earth);margin-bottom:1.5rem}
-    .testi-author{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--clay)}
+    .testi-quote{font-family:var(--ff-display);font-size:1.05rem;font-weight:300;font-style:italic;line-height:1.65;color:var(--earth);margin-bottom:1.4rem}
+    .testi-author{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--clay)}
 
-    /* CTA */
     .cta-section{background:var(--earth);padding:8rem 3rem;text-align:center;position:relative;overflow:hidden}
-    .cta-section::before{content:'';position:absolute;inset:0;background-image:radial-gradient(ellipse at 30% 50%,rgba(201,169,110,.08) 0%,transparent 60%),radial-gradient(ellipse at 70% 50%,rgba(201,169,110,.06) 0%,transparent 60%)}
+    .cta-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(201,169,110,.07) 0%,transparent 60%),radial-gradient(ellipse at 70% 50%,rgba(201,169,110,.05) 0%,transparent 60%)}
     .cta-inner{position:relative;max-width:680px;margin:0 auto}
-    .cta-eyebrow{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem}
-    .cta-title{font-family:var(--ff-display);font-size:clamp(2.4rem,5vw,4.2rem);font-weight:300;line-height:1.1;color:var(--white);margin-bottom:1.5rem}
+    .cta-eyebrow{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:1.1rem}
+    .cta-title{font-family:var(--ff-display);font-size:clamp(2.4rem,5vw,4rem);font-weight:300;line-height:1.1;color:var(--white);margin-bottom:1.4rem}
     .cta-title em{font-style:italic;color:var(--gold-lt)}
-    .cta-body{font-size:.95rem;line-height:1.8;color:var(--sand);margin-bottom:2.8rem}
+    .cta-body{font-size:.93rem;line-height:1.8;color:var(--sand);margin-bottom:2.8rem}
     .cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
-    .btn-gold{font-size:.75rem;font-weight:400;letter-spacing:.14em;text-transform:uppercase;color:var(--earth);background:var(--gold);padding:1rem 2.6rem;text-decoration:none;transition:background .3s,transform .2s;font-family:var(--ff-body)}
+    .btn-gold{font-family:var(--ff-body);font-size:.74rem;font-weight:400;letter-spacing:.14em;text-transform:uppercase;color:var(--earth);background:var(--gold);padding:1rem 2.5rem;text-decoration:none;transition:background .3s,transform .2s}
     .btn-gold:hover{background:var(--gold-lt);transform:translateY(-2px)}
-    .btn-outline-lt{font-size:.75rem;font-weight:400;letter-spacing:.14em;text-transform:uppercase;color:var(--sand);background:transparent;border:1px solid rgba(212,197,169,.35);padding:1rem 2.6rem;text-decoration:none;transition:border-color .3s,color .3s;font-family:var(--ff-body)}
+    .btn-outline-lt{font-family:var(--ff-body);font-size:.74rem;font-weight:400;letter-spacing:.14em;text-transform:uppercase;color:var(--sand);background:transparent;border:1px solid rgba(212,197,169,.3);padding:1rem 2.5rem;text-decoration:none;transition:border-color .3s,color .3s}
     .btn-outline-lt:hover{border-color:var(--gold);color:var(--white)}
-    .cta-stats{display:flex;justify-content:center;gap:4rem;margin-top:4rem;padding-top:3rem;border-top:1px solid rgba(212,197,169,.15);flex-wrap:wrap}
+    .cta-stats{display:flex;justify-content:center;gap:4rem;margin-top:4rem;padding-top:3rem;border-top:1px solid rgba(212,197,169,.12);flex-wrap:wrap}
     .cta-stat-num{font-family:var(--ff-display);font-size:2.8rem;font-weight:300;color:var(--gold-lt);display:block}
-    .cta-stat-label{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--clay)}
+    .cta-stat-label{font-size:.67rem;letter-spacing:.18em;text-transform:uppercase;color:var(--clay)}
 
-    /* FOOTER */
-    footer{background:var(--charcoal);padding:4rem 3rem 2rem}
+    footer{background:var(--charcoal);padding:4.5rem 3rem 2rem}
     .footer-inner{max-width:1200px;margin:0 auto}
     .footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem}
     .footer-brand{font-family:var(--ff-display);font-size:1.6rem;font-weight:300;color:var(--white);margin-bottom:1rem}
-    .footer-tagline{font-size:.83rem;line-height:1.7;color:rgba(212,197,169,.55);margin-bottom:1.5rem}
-    .footer-col-title{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem}
+    .footer-tagline{font-size:.82rem;line-height:1.75;color:rgba(212,197,169,.5);margin-bottom:1.4rem}
+    .footer-col-title{font-size:.67rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:1.1rem}
     .footer-col ul{list-style:none}
-    .footer-col ul li{margin-bottom:.6rem}
-    .footer-col ul a{font-size:.83rem;color:rgba(212,197,169,.55);text-decoration:none;transition:color .3s}
+    .footer-col ul li{margin-bottom:.55rem}
+    .footer-col ul a{font-size:.82rem;color:rgba(212,197,169,.5);text-decoration:none;transition:color .3s}
     .footer-col ul a:hover{color:var(--sand)}
-    .footer-bottom{border-top:1px solid rgba(212,197,169,.1);padding-top:1.8rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
-    .footer-copy{font-size:.75rem;color:rgba(212,197,169,.35)}
-    .footer-note{font-size:.7rem;color:rgba(212,197,169,.25);font-style:italic}
+    .footer-bottom{border-top:1px solid rgba(212,197,169,.08);padding-top:1.8rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+    .footer-copy{font-size:.74rem;color:rgba(212,197,169,.3)}
+    .footer-note{font-size:.68rem;color:rgba(212,197,169,.2);font-style:italic}
 
-    /* KEYFRAMES */
+    /* ───── KEYFRAMES ───── */
     @keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
-    @keyframes scrollPulse{0%,100%{opacity:.5;transform:scaleY(1)}50%{opacity:1;transform:scaleY(1.15)}}
+    @keyframes scrollPulse{0%,100%{opacity:.4;transform:scaleY(1)}50%{opacity:.9;transform:scaleY(1.12)}}
     @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-    @keyframes pulseRing{0%{transform:scale(1);opacity:.6}100%{transform:scale(1.55);opacity:0}}
-
-    /* PULSE RINGS on trust icons */
-    .trust-icon-circle .ring{
-      position:absolute;inset:0;border-radius:50%;
-      border:1px solid rgba(201,169,110,.4);
-      animation:pulseRing 2.4s ease-out infinite;
-      pointer-events:none;
+    @keyframes pulseRing{
+      0%{transform:scale(1);opacity:.35}
+      80%{transform:scale(1.65);opacity:0}
+      100%{transform:scale(1.65);opacity:0}
     }
-    .trust-icon-circle .ring:nth-child(2){animation-delay:.8s}
 
-    @media(max-width:900px){
-      nav{padding:1.2rem 1.5rem}
+    /* ───── RESPONSIVE ───── */
+    @media(max-width:1024px){
+      .coll-grid{grid-template-columns:repeat(3,1fr)}
+    }
+    @media(max-width:700px){
+      nav{padding:1.1rem 1.4rem}
       .nav-links{display:none}
-      section{padding:5rem 1.5rem}
-      .features-inner{grid-template-columns:1fr;gap:3rem}
+      .coll-grid{grid-template-columns:repeat(2,1fr)}
+      .features-inner{grid-template-columns:1fr}
       .features-text{padding-right:0}
       .testi-grid{grid-template-columns:1fr}
       .footer-top{grid-template-columns:1fr 1fr}
-      .coll-grid{grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(6,1fr)}
-      .trust-icon-pill.spread{width:120px}
-      .trust-icon-circle{width:70px;height:70px}
+      .trust-pill{width:100px}
+      .trust-circle{width:68px;height:68px}
     }
   </style>
 </head>
@@ -390,223 +456,192 @@
 <nav id="main-nav">
   <a href="#" class="nav-logo">Blue Leaf</a>
   <ul class="nav-links">
-    <li><a href="#features">About</a></li>
-    <li><a href="#collections">Collections</a></li>
-    <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#features-section">About</a></li>
+    <li><a href="#collections-section">Collections</a></li>
+    <li><a href="#testi-section">Reviews</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
   <a href="#contact" class="nav-cta">Shop Now</a>
 </nav>
 
-<!-- HERO -->
+<!-- ══════════ HERO + TRUST ICONS ══════════ -->
 <div class="hero-wrap" id="hero-wrap">
-  <div class="hero-sticky">
+  <div class="hero-sticky" id="hero-sticky">
+
+    <!-- Frame canvas — drawn crisp at device pixels -->
     <canvas id="hero-canvas"></canvas>
+
+    <!-- Left gradient overlay -->
     <div class="hero-overlay"></div>
+
+    <!-- Text — lower left -->
     <div class="hero-content" id="hero-content">
       <p class="hero-eyebrow">Australia's Premium Bathware</p>
       <h1 class="hero-title">Where <em>Luxury</em><br>Meets Function</h1>
-      <p class="hero-sub">Curated bathware, tiles & tapware from Australia's finest brands — designed for the way you live.</p>
+      <p class="hero-sub">Curated bathware, tiles &amp; tapware from Australia's finest brands — designed for the way you live.</p>
       <div class="hero-btns">
-        <a href="#collections" class="btn-primary">Explore Collections</a>
+        <a href="#collections-section" class="btn-primary">Explore Collections</a>
         <a href="#contact" class="btn-ghost">Visit Showroom</a>
       </div>
     </div>
+
+    <!-- Scroll hint — right side -->
     <div class="hero-scroll-hint">
       <div class="scroll-line"></div>
       <span>Scroll</span>
     </div>
-  </div>
-</div>
 
-<!-- TRUST BURST -->
-<div class="trust-burst-wrap" id="trust-burst-wrap">
-  <div class="trust-burst-sticky" id="trust-burst-sticky">
-    <div class="trust-burst-bg"></div>
-
-    <!-- Center headline (shows when icons spread) -->
-    <div class="trust-headline" id="trust-headline">
-      <h2>Built on <em>Trust</em><br>& Quality</h2>
-      <p>Every promise. Every time.</p>
-    </div>
-
-    <!-- 4 trust icon pills spread from center bottom -->
-    <div class="trust-icons-row" id="trust-icons-row">
-      <div class="trust-icon-pill" data-index="0">
-        <div class="trust-icon-circle">
-          <div class="ring"></div><div class="ring"></div>
+    <!-- TRUST ICONS — always on the hero, above canvas -->
+    <div class="trust-row" id="trust-row">
+      <div class="trust-pill" id="tp0">
+        <div class="trust-circle">
           <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
             <path d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677"/>
           </svg>
         </div>
-        <div class="trust-icon-label">Free Delivery<br>Over $150</div>
+        <div class="trust-label">Free Delivery<br>Over $150</div>
       </div>
-      <div class="trust-icon-pill" data-index="1">
-        <div class="trust-icon-circle">
-          <div class="ring"></div><div class="ring"></div>
+      <div class="trust-pill" id="tp1">
+        <div class="trust-circle">
           <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
             <path d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
           </svg>
         </div>
-        <div class="trust-icon-label">Voted Best<br>Service</div>
+        <div class="trust-label">Voted Best<br>Service</div>
       </div>
-      <div class="trust-icon-pill" data-index="2">
-        <div class="trust-icon-circle">
-          <div class="ring"></div><div class="ring"></div>
+      <div class="trust-pill" id="tp2">
+        <div class="trust-circle">
           <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
             <path d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/>
           </svg>
         </div>
-        <div class="trust-icon-label">Easy 30-Day<br>Returns</div>
+        <div class="trust-label">Easy 30-Day<br>Returns</div>
       </div>
-      <div class="trust-icon-pill" data-index="3">
-        <div class="trust-icon-circle">
-          <div class="ring"></div><div class="ring"></div>
+      <div class="trust-pill" id="tp3">
+        <div class="trust-circle">
           <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
+            <path d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
+            <path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
           </svg>
         </div>
-        <div class="trust-icon-label">Proudly<br>Australian</div>
+        <div class="trust-label">Proudly<br>Australian</div>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- COLLECTIONS -->
-<div class="collections-wrap" id="collections-wrap">
-  <div class="collections-sticky" id="collections">
+  </div><!-- end hero-sticky -->
+</div><!-- end hero-wrap -->
+
+<!-- ══════════ COLLECTIONS ══════════ -->
+<section class="collections-section" id="collections-section">
+  <div class="collections-inner">
     <div class="collections-header" id="coll-header">
-      <p class="collections-eyebrow">Our Collections</p>
-      <h2 class="collections-title">Shop by <em>Category</em></h2>
+      <p class="coll-eyebrow">Our Collections</p>
+      <h2 class="coll-title">Shop by <em>Category</em></h2>
     </div>
     <div class="coll-grid" id="coll-grid">
-      <!-- 12 cards: 3 cols × 4 rows -->
+
       <div class="coll-card">
-        <div class="coll-bg"></div>
+        <div class="coll-bg"></div><div class="coll-accent"></div>
         <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
-        <div class="coll-content">
-          <div class="coll-name">Vanities & Cabinets</div>
-          <div class="coll-count">180+ Products</div>
-        </div>
-        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
+        <div class="coll-content"><div class="coll-name">Vanities &amp; Cabinets</div><div class="coll-count">180+ Products</div></div>
+        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
       </div>
+
       <div class="coll-card">
-        <div class="coll-bg"></div>
+        <div class="coll-bg"></div><div class="coll-accent"></div>
         <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
-        <div class="coll-content">
-          <div class="coll-name">Shaving Cabinets</div>
-          <div class="coll-count">65+ Products</div>
-        </div>
-        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
+        <div class="coll-content"><div class="coll-name">Shaving Cabinets</div><div class="coll-count">65+ Products</div></div>
+        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
       </div>
+
       <div class="coll-card">
-        <div class="coll-bg"></div>
-        <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19h18M5 19V8.5A2.5 2.5 0 017.5 6h9A2.5 2.5 0 0119 8.5V19"/><path d="M9 6V4m6 2V4"/></svg>
-        <div class="coll-content">
-          <div class="coll-name">Baths</div>
-          <div class="coll-count">95+ Products</div>
-        </div>
-        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
+        <div class="coll-bg"></div><div class="coll-accent"></div>
+        <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19h18M5 19V8.5A2.5 2.5 0 017.5 6h9A2.5 2.5 0 0119 8.5V19"/></svg>
+        <div class="coll-content"><div class="coll-name">Baths</div><div class="coll-count">95+ Products</div></div>
+        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
       </div>
+
       <div class="coll-card">
-        <div class="coll-bg"></div>
-        <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v2m0 14v2M5 12H3m18 0h-2m-2.05-6.95l-1.41 1.41M7.46 16.54l-1.41 1.41m12.9 0l-1.41-1.41M7.46 7.46L6.05 6.05"/><circle cx="12" cy="12" r="4"/></svg>
-        <div class="coll-content">
-          <div class="coll-name">Showers</div>
-          <div class="coll-count">120+ Products</div>
-        </div>
-        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
+        <div class="coll-bg"></div><div class="coll-accent"></div>
+        <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v2m6.364.636l-1.414 1.414M21 12h-2m-.636 6.364l-1.414-1.414M12 21v-2m-6.364-.636l1.414-1.414M3 12h2m.636-6.364L7.05 7.05"/><circle cx="12" cy="12" r="4"/></svg>
+        <div class="coll-content"><div class="coll-name">Showers</div><div class="coll-count">120+ Products</div></div>
+        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
       </div>
+
       <div class="coll-card">
-        <div class="coll-bg"></div>
-        <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-        <div class="coll-content">
-          <div class="coll-name">Basins</div>
-          <div class="coll-count">140+ Products</div>
-        </div>
-        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
+        <div class="coll-bg"></div><div class="coll-accent"></div>
+        <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="10" rx="8" ry="5"/><path d="M4 10v4c0 2.76 3.58 5 8 5s8-2.24 8-5v-4"/></svg>
+        <div class="coll-content"><div class="coll-name">Basins</div><div class="coll-count">140+ Products</div></div>
+        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
       </div>
+
       <div class="coll-card">
-        <div class="coll-bg"></div>
+        <div class="coll-bg"></div><div class="coll-accent"></div>
         <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M6 13.5V3.75m0 9.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 3.75V16.5m12-3V3.75m0 9.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 3.75V16.5m-6-9V3.75m0 3.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 9.75V10.5"/></svg>
-        <div class="coll-content">
-          <div class="coll-name">Tapware</div>
-          <div class="coll-count">320+ Products</div>
-        </div>
-        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
+        <div class="coll-content"><div class="coll-name">Tapware</div><div class="coll-count">320+ Products</div></div>
+        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
       </div>
+
       <div class="coll-card">
-        <div class="coll-bg"></div>
-        <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h.01M15 9h.01M9 15h.01M15 15h.01M12 12h.01"/></svg>
-        <div class="coll-content">
-          <div class="coll-name">Toilets</div>
-          <div class="coll-count">75+ Products</div>
-        </div>
-        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
+        <div class="coll-bg"></div><div class="coll-accent"></div>
+        <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        <div class="coll-content"><div class="coll-name">Toilets</div><div class="coll-count">75+ Products</div></div>
+        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
       </div>
+
       <div class="coll-card">
-        <div class="coll-bg"></div>
+        <div class="coll-bg"></div><div class="coll-accent"></div>
         <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18"/></svg>
-        <div class="coll-content">
-          <div class="coll-name">LED Mirrors</div>
-          <div class="coll-count">60+ Products</div>
-        </div>
-        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
+        <div class="coll-content"><div class="coll-name">LED Mirrors</div><div class="coll-count">60+ Products</div></div>
+        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
       </div>
+
       <div class="coll-card">
-        <div class="coll-bg"></div>
+        <div class="coll-bg"></div><div class="coll-accent"></div>
         <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
-        <div class="coll-content">
-          <div class="coll-name">Heated Towel Rails</div>
-          <div class="coll-count">45+ Products</div>
-        </div>
-        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
+        <div class="coll-content"><div class="coll-name">Heated Towel Rails</div><div class="coll-count">45+ Products</div></div>
+        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
       </div>
+
       <div class="coll-card">
-        <div class="coll-bg"></div>
-        <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
-        <div class="coll-content">
-          <div class="coll-name">Kitchen Sinks</div>
-          <div class="coll-count">85+ Products</div>
-        </div>
-        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
+        <div class="coll-bg"></div><div class="coll-accent"></div>
+        <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75"/></svg>
+        <div class="coll-content"><div class="coll-name">Kitchen Sinks</div><div class="coll-count">85+ Products</div></div>
+        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
       </div>
+
       <div class="coll-card">
-        <div class="coll-bg"></div>
+        <div class="coll-bg"></div><div class="coll-accent"></div>
         <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/></svg>
-        <div class="coll-content">
-          <div class="coll-name">Fans & Lighting</div>
-          <div class="coll-count">110+ Products</div>
-        </div>
-        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
+        <div class="coll-content"><div class="coll-name">Fans &amp; Lighting</div><div class="coll-count">110+ Products</div></div>
+        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
       </div>
+
       <div class="coll-card">
-        <div class="coll-bg"></div>
-        <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-        <div class="coll-content">
-          <div class="coll-name">Accessories</div>
-          <div class="coll-count">200+ Products</div>
-        </div>
-        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
+        <div class="coll-bg"></div><div class="coll-accent"></div>
+        <svg class="coll-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"/></svg>
+        <div class="coll-content"><div class="coll-name">Accessories</div><div class="coll-count">200+ Products</div></div>
+        <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
       </div>
-    </div>
+
+    </div><!-- end coll-grid -->
   </div>
-</div>
+</section>
 
 <!-- FEATURES -->
-<section class="features" id="features">
+<section class="features-section" id="features-section">
   <div class="features-inner">
     <div class="features-text">
-      <p class="section-eyebrow">Why Blue Leaf</p>
-      <h2 class="section-title">Crafted for the<br><em>Discerning Home</em></h2>
-      <div class="features-divider"></div>
-      <p class="section-body">For over a decade, Blue Leaf Bathware has been Australia's most trusted source for premium bathroom and kitchen products. We carry only what we believe in — every tap, basin and fitting hand-selected.</p>
+      <p class="sec-eyebrow">Why Blue Leaf</p>
+      <h2 class="sec-title">Crafted for the<br><em>Discerning Home</em></h2>
+      <div class="sec-divider"></div>
+      <p class="sec-body">For over a decade, Blue Leaf Bathware has been Australia's most trusted source for premium bathroom and kitchen products. We carry only what we believe in — every tap, basin and fitting hand-selected from the world's finest manufacturers.</p>
     </div>
     <div class="features-grid">
       <div class="feature-card"><div class="feature-num">1,000+</div><div class="feature-name">In-Stock Products</div><div class="feature-desc">Australia's largest in-stock bathware collection, ready to ship.</div></div>
       <div class="feature-card"><div class="feature-num">26+</div><div class="feature-name">Premium Brands</div><div class="feature-desc">Official retailer for Caroma, Phoenix, Meir, Nero and more.</div></div>
       <div class="feature-card"><div class="feature-num">10yr</div><div class="feature-name">Warranty Support</div><div class="feature-desc">Full manufacturer warranties backed by our local team.</div></div>
-      <div class="feature-card"><div class="feature-num">5★</div><div class="feature-name">Customer Rating</div><div class="feature-desc">Voted best service by thousands of happy renovators.</div></div>
+      <div class="feature-card"><div class="feature-num">5★</div><div class="feature-name">Customer Rating</div><div class="feature-desc">Voted best service by thousands of happy Australian renovators.</div></div>
     </div>
   </div>
 </section>
@@ -615,17 +650,16 @@
 <div class="marquee-strip">
   <div class="marquee-track">
     <span>Caroma</span><span class="dot">◆</span><span>Phoenix</span><span class="dot">◆</span><span>Meir</span><span class="dot">◆</span><span>Nero Tapware</span><span class="dot">◆</span><span>Fienza</span><span class="dot">◆</span><span>Decina</span><span class="dot">◆</span><span>Abey</span><span class="dot">◆</span><span>Remer</span><span class="dot">◆</span><span>Timberline</span><span class="dot">◆</span><span>Oliveri</span><span class="dot">◆</span><span>Geberit</span><span class="dot">◆</span><span>Parisi</span><span class="dot">◆</span>
-    <span>Caroma</span><span class="dot">◆</span><span>Phoenix</span><span class="dot">◆</span><span>Meir</span><span class="dot">◆</span><span>Nero Tapware</span><span class="dot">◆</span><span>Fienza</span><span class="dot">◆</span><span>Decina</span><span class="dot">◆</span><span>Abey</span><span class="dot">◆</span><span>Remer</span><span class="dot">◆</span><span>Timberline</span><span class="dot">◆</span><span>Oliveri</span><span class="dot">◆</span><span>Geberit</span><span class="dot">◆</span><span>Parisi</span><span class="dot">◆</span>
+    <span>Caroma</span><span class="dot">◆</span><span>Phoenix</span><span class="dot">◆</span><span>Meir</span><span class="dot">◆</span><span>Nero Tapware</span><span class="dot">◆</span><span>Fienza</span><span class="dot">◆</span><span>Decina</span><span class="dot">◆</span><span>Abey</span><span class="dot">◆</span><span>Remer</span><span class="dot">◆</span><span>Timberline</span><span class="dot">◆</span><span class="dot">◆</span><span>Parisi</span><span class="dot">◆</span>
   </div>
 </div>
 
 <!-- TESTIMONIALS -->
-<section class="testimonials" id="testimonials">
-  <div class="testimonials-inner">
+<section class="testi-section" id="testi-section">
+  <div class="testi-inner">
     <div class="testi-header">
-      <p class="section-eyebrow">Customer Stories</p>
-      <h2 class="section-title">Loved by <em>Thousands</em></h2>
-      <p class="section-body">Real Australians, real renovations.</p>
+      <p class="sec-eyebrow" style="text-align:center">Customer Stories</p>
+      <h2 class="sec-title" style="text-align:center;color:var(--earth)">Loved by <em>Thousands</em></h2>
     </div>
     <div class="testi-grid">
       <div class="testi-card">
@@ -673,179 +707,184 @@
       <div>
         <div class="footer-brand">Blue Leaf</div>
         <p class="footer-tagline">Australia's most trusted online supplier for vanities, toilets, baths, tapware and tiles. Proudly Australian owned and operated.</p>
-        <p style="font-size:.75rem;color:rgba(212,197,169,.35)">5/9 Ladbroke St, Milperra NSW 2214<br>Mon–Fri 8:30am–4:30pm</p>
+        <p style="font-size:.74rem;color:rgba(212,197,169,.28)">5/9 Ladbroke St, Milperra NSW 2214<br>Mon–Fri 8:30am–4:30pm</p>
       </div>
-      <div class="footer-col"><div class="footer-col-title">Shop</div><ul><li><a href="#">Bathroom</a></li><li><a href="#">Kitchen & Laundry</a></li><li><a href="#">Vanities</a></li><li><a href="#">Fans & Lighting</a></li><li><a href="#">Clearance Sale</a></li></ul></div>
+      <div class="footer-col"><div class="footer-col-title">Shop</div><ul><li><a href="#">Bathroom</a></li><li><a href="#">Kitchen &amp; Laundry</a></li><li><a href="#">Vanities</a></li><li><a href="#">Fans &amp; Lighting</a></li><li><a href="#">Clearance Sale</a></li></ul></div>
       <div class="footer-col"><div class="footer-col-title">Brands</div><ul><li><a href="#">Caroma</a></li><li><a href="#">Phoenix</a></li><li><a href="#">Meir</a></li><li><a href="#">Nero Tapware</a></li><li><a href="#">All Brands</a></li></ul></div>
       <div class="footer-col"><div class="footer-col-title">Help</div><ul><li><a href="#">Delivery</a></li><li><a href="#">Returns</a></li><li><a href="#">Warranty</a></li><li><a href="#">Contact Us</a></li><li><a href="#">About</a></li></ul></div>
     </div>
     <div class="footer-bottom">
-      <span class="footer-copy">© 2025 Blue Leaf Bathware & Tiles. All rights reserved.</span>
+      <span class="footer-copy">© 2025 Blue Leaf Bathware &amp; Tiles. All rights reserved.</span>
       <span class="footer-note">Demo site — built as a portfolio concept</span>
     </div>
   </div>
 </footer>
 
 <script>
-  // ── RESET ──
+  /* ─── SCROLL RESET ─── */
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   window.scrollTo(0, 0);
 
-  // ── CONFIG ──
+  /* ─── CONFIG ─── */
   const TOTAL_FRAMES = 280;
-  const FRAME_FOLDER = 'frames';
-  const FRAME_PREFIX = 'ezgif-frame-';
+  const FOLDER = 'frames';
+  const PREFIX = 'ezgif-frame-';
 
-  // ── CANVAS ──
+  /* ─── CANVAS — draw at full device pixels, no CSS scaling ─── */
   const canvas = document.getElementById('hero-canvas');
-  const ctx = canvas.getContext('2d');
-  const frames = [];
+  const ctx    = canvas.getContext('2d');
+  const DPR    = window.devicePixelRatio || 1;
+  const frames = new Array(TOTAL_FRAMES);
   let loadedCount = 0;
   let currentFrame = 0;
+  let targetFrame  = 0;
+  let displayFrame = 0;
 
-  function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    if (frames[currentFrame]?.complete) drawFrame(currentFrame);
+  function resizeCanvas() {
+    /* Set canvas buffer to device pixels for crisp rendering */
+    canvas.width  = Math.round(window.innerWidth  * DPR);
+    canvas.height = Math.round(window.innerHeight * DPR);
+    /* CSS size = viewport */
+    canvas.style.width  = window.innerWidth  + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+    drawFrame(currentFrame);
   }
-  window.addEventListener('resize', resize);
-  resize();
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
 
-  function drawFrame(index) {
-    const img = frames[index];
+  function drawFrame(idx) {
+    const img = frames[idx];
     if (!img || !img.complete || !img.naturalWidth) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const scale = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
-    const w = img.naturalWidth * scale;
+    /* cover-fit, centered */
+    const scale = Math.max(
+      canvas.width  / img.naturalWidth,
+      canvas.height / img.naturalHeight
+    );
+    const w = img.naturalWidth  * scale;
     const h = img.naturalHeight * scale;
     ctx.drawImage(img, (canvas.width - w) / 2, (canvas.height - h) / 2, w, h);
   }
 
-  // ── LOADER ──
+  /* ─── LOADER ─── */
   const loaderEl  = document.getElementById('loader');
   const loaderBar = document.getElementById('loader-bar');
   const loaderPct = document.getElementById('loader-pct');
-  function pad(n) { return String(n).padStart(3, '0'); }
+  const pad = n => String(n).padStart(3,'0');
 
   function loadFrames() {
     for (let i = 1; i <= TOTAL_FRAMES; i++) {
       const img = new Image();
-      img.src = `${FRAME_FOLDER}/${FRAME_PREFIX}${pad(i)}.webp`;
+      img.src = `${FOLDER}/${PREFIX}${pad(i)}.webp`;
       img.onload = () => {
         loadedCount++;
-        const pct = Math.round((loadedCount / TOTAL_FRAMES) * 100);
+        const pct = Math.round(loadedCount / TOTAL_FRAMES * 100);
         loaderBar.style.width = pct + '%';
         loaderPct.textContent = pct + '%';
         if (i === 1) drawFrame(0);
-        if (loadedCount === TOTAL_FRAMES) setTimeout(() => loaderEl.classList.add('hidden'), 400);
+        if (loadedCount === TOTAL_FRAMES) {
+          setTimeout(() => loaderEl.classList.add('hidden'), 400);
+        }
       };
-      img.onerror = () => { loadedCount++; };
+      img.onerror = () => loadedCount++;
       frames[i - 1] = img;
     }
   }
 
-  // ── SCROLL DRIVER ──
-  let targetFrame = 0, displayFrame = 0;
-
-  function getProgress(el) {
+  /* ─── SCROLL PROGRESS HELPER ─── */
+  function progress(el) {
     const rect = el.getBoundingClientRect();
     const scrollable = el.offsetHeight - window.innerHeight;
     return Math.max(0, Math.min(1, -rect.top / scrollable));
   }
 
-  // ── TRUST BURST LOGIC ──
-  const trustWrap    = document.getElementById('trust-burst-wrap');
-  const trustPills   = document.querySelectorAll('.trust-icon-pill');
-  const trustHeadline = document.getElementById('trust-headline');
-  let trustTriggered = false;
+  /* ─── TRUST ICONS ─── */
+  const trustPills = document.querySelectorAll('.trust-pill');
 
-  function updateTrust(p) {
-    // p: 0→1 through the trust section
-    // Icons scatter out from 0.1→0.5, collapse back 0.8→1.0
-    const spreadIn  = Math.min(1, Math.max(0, (p - 0.08) / 0.25));
-    const collapseOut = Math.min(1, Math.max(0, (p - 0.78) / 0.18));
-    const show = spreadIn > 0 && collapseOut < 1;
-
-    trustPills.forEach((pill, i) => {
-      if (spreadIn > 0 && collapseOut === 0) {
-        pill.classList.add('spread');
-      } else if (collapseOut > 0) {
-        // collapse: move back to center + fade
-        pill.style.opacity = 1 - collapseOut;
-        pill.style.transform = `translateY(${collapseOut * 80}px) scale(${1 - collapseOut * 0.4})`;
+  /* Trust icons appear during the LAST 200vh of hero-wrap */
+  /* hero-wrap = 800vh total; frames use first 600vh; last 200vh = trust phase */
+  function updateTrust(heroProgress) {
+    /* trust phase starts at 0.75 of hero-wrap (600/800), ends at 1.0 */
+    const phase = Math.max(0, Math.min(1, (heroProgress - 0.72) / 0.28));
+    const show  = phase > 0.08;
+    trustPills.forEach(pill => {
+      if (show) {
+        pill.classList.add('show');
       } else {
-        pill.classList.remove('spread');
-        pill.style.opacity = '';
+        pill.classList.remove('show');
+        pill.style.opacity  = '';
         pill.style.transform = '';
       }
     });
-
-    // headline fades in with icons, fades out with collapse
-    const headlineOpacity = Math.min(spreadIn, 1 - collapseOut);
-    trustHeadline.style.opacity = headlineOpacity;
   }
 
-  // ── COLLECTIONS LOGIC ──
-  const collWrap   = document.getElementById('collections-wrap');
+  /* ─── COLLECTIONS REVEAL ─── */
   const collHeader = document.getElementById('coll-header');
   const collCards  = document.querySelectorAll('.coll-card');
-  let collTriggered = false;
-
-  function updateCollections(p) {
-    // header shows at p > 0.05
-    if (p > 0.05) collHeader.classList.add('show');
-    else collHeader.classList.remove('show');
-
-    // cards pop in one by one from p 0.1 to 0.7
-    collCards.forEach((card, i) => {
-      const threshold = 0.1 + (i / collCards.length) * 0.55;
-      if (p >= threshold) card.classList.add('pop');
-      else card.classList.remove('pop');
+  const collObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        collHeader.classList.add('show');
+        /* stagger cards */
+        collCards.forEach((card, i) => {
+          setTimeout(() => card.classList.add('pop'), i * 65);
+        });
+        collObs.disconnect();
+      }
     });
-  }
+  }, { threshold: 0.1 });
+  collObs.observe(document.getElementById('collections-section'));
 
-  // ── MAIN SCROLL HANDLER ──
-  function onScroll() {
-    const scrollY = window.scrollY;
+  /* ─── MAIN SCROLL HANDLER ─── */
+  const heroWrap   = document.getElementById('hero-wrap');
+  const heroContent= document.getElementById('hero-content');
+  const nav        = document.getElementById('main-nav');
 
-    // NAV
-    document.getElementById('main-nav').classList.toggle('scrolled', scrollY > 80);
+  window.addEventListener('scroll', () => {
+    const p = progress(heroWrap);
 
-    // HERO frames
-    const heroProgress = getProgress(document.getElementById('hero-wrap'));
-    targetFrame = Math.floor(heroProgress * (TOTAL_FRAMES - 1));
-    const fadeOut = Math.min(1, heroProgress * 4);
-    const heroContent = document.getElementById('hero-content');
-    heroContent.style.opacity = 1 - fadeOut;
-    heroContent.style.transform = `translateY(${fadeOut * -30}px)`;
+    /* frame target (only first 75% of hero-wrap drives frames) */
+    const frameP = Math.min(1, p / 0.75);
+    targetFrame  = Math.floor(frameP * (TOTAL_FRAMES - 1));
 
-    // TRUST BURST
-    const trustProgress = getProgress(trustWrap);
-    updateTrust(trustProgress);
+    /* fade hero text out fast at start of scroll */
+    const fadeOut = Math.min(1, p * 6);
+    heroContent.style.opacity   = 1 - fadeOut;
+    heroContent.style.transform = `translateY(${fadeOut * -28}px)`;
 
-    // COLLECTIONS
-    const collProgress = getProgress(collWrap);
-    updateCollections(collProgress);
-  }
+    /* trust icons */
+    updateTrust(p);
 
-  window.addEventListener('scroll', onScroll, { passive: true });
+    /* nav */
+    nav.classList.toggle('scrolled', window.scrollY > 80);
+  }, { passive: true });
 
-  // ── RAF LOOP ──
+  /* ─── SMOOTH RAF LOOP ─── */
   function animLoop() {
-    if (Math.abs(displayFrame - targetFrame) > 0.4) {
-      displayFrame += (targetFrame - displayFrame) * 0.18;
+    const diff = targetFrame - displayFrame;
+    if (Math.abs(diff) > 0.3) {
+      displayFrame += diff * 0.16;
       const idx = Math.min(Math.round(displayFrame), TOTAL_FRAMES - 1);
-      if (idx !== currentFrame) { currentFrame = idx; drawFrame(currentFrame); }
+      if (idx !== currentFrame) {
+        currentFrame = idx;
+        drawFrame(currentFrame);
+      }
     }
     requestAnimationFrame(animLoop);
   }
 
-  // ── INTERSECTION OBSERVER ──
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }});
+  /* ─── INTERSECTION OBSERVER for features + testimonials ─── */
+  const revealObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        revealObs.unobserve(e.target);
+      }
+    });
   }, { threshold: 0.15 });
-  document.querySelectorAll('.feature-card, .testi-card').forEach(el => observer.observe(el));
+  document.querySelectorAll('.feature-card, .testi-card').forEach(el => revealObs.observe(el));
 
+  /* ─── BOOT ─── */
   loadFrames();
   animLoop();
 </script>
