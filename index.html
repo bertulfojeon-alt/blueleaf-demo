@@ -75,13 +75,13 @@
     .scroll-line { width: 1px; height: 44px; background: linear-gradient(to bottom, rgba(255,255,255,.5), transparent); animation: scrollPulse 2s ease-in-out infinite; }
 
     /* TRUST ICONS — overlaid on hero */
-    .trust-row { position: absolute; bottom: 8vh; left: 50%; transform: translateX(-50%); z-index: 30; display: flex; align-items: flex-end; pointer-events: none; }
-    .trust-pill { display: flex; flex-direction: column; align-items: center; gap: .75rem; opacity: 0; transform: translateY(80px) scale(.4); transition: opacity .6s cubic-bezier(.22,1,.36,1), transform .6s cubic-bezier(.22,1,.36,1); width: 0; overflow: hidden; pointer-events: none; }
-    .trust-pill.show { opacity: 1; width: 150px; overflow: visible; pointer-events: auto; }
-    .trust-pill.show:nth-child(1) { transform: translateY(16px) scale(1); transition-delay: .04s; margin: 0 6px; }
-    .trust-pill.show:nth-child(2) { transform: translateY(0) scale(1); transition-delay: .14s; margin: 0 6px; }
-    .trust-pill.show:nth-child(3) { transform: translateY(0) scale(1); transition-delay: .24s; margin: 0 6px; }
-    .trust-pill.show:nth-child(4) { transform: translateY(16px) scale(1); transition-delay: .34s; margin: 0 6px; }
+    .trust-row { position: absolute; bottom: 8vh; left: 50%; transform: translateX(-50%); z-index: 30; display: flex; align-items: flex-start; gap: 2rem; pointer-events: none; white-space: nowrap; }
+    .trust-pill { display: flex; flex-direction: column; align-items: center; gap: .75rem; opacity: 0; transform: translateY(60px) scale(.5); transition: opacity .6s cubic-bezier(.22,1,.36,1), transform .6s cubic-bezier(.22,1,.36,1); width: 0; overflow: hidden; pointer-events: none; flex-shrink: 0; }
+    .trust-pill.show { opacity: 1; width: 145px; overflow: visible; pointer-events: auto; transform: translateY(0) scale(1); }
+    .trust-pill.show:nth-child(1) { transition-delay: .04s; }
+    .trust-pill.show:nth-child(2) { transition-delay: .14s; }
+    .trust-pill.show:nth-child(3) { transition-delay: .24s; }
+    .trust-pill.show:nth-child(4) { transition-delay: .34s; }
     .trust-circle { width: 90px; height: 90px; border-radius: 50%; background: rgba(255,255,255,.12); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.3); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,.3); transition: border-color .35s, background .35s, transform .35s, box-shadow .35s; }
     .trust-circle::after { content: ''; position: absolute; inset: 0; border-radius: 50%; border: 1px solid rgba(255,255,255,.25); animation: pulseRing 2.8s ease-out infinite; pointer-events: none; }
     .trust-pill:nth-child(1) .trust-circle::after { animation-delay: 0s; }
@@ -262,7 +262,7 @@
     <div class="trust-row" id="trust-row">
       <div class="trust-pill">
         <div class="trust-circle">
-          <img src="Hero Icons/FREE Delivery.png" alt="Free Delivery" class="trust-icon-img"/>
+          <img src="Hero%20Icons/FREE%20Delivery.png" alt="Free Delivery" class="trust-icon-img"/>
         </div>
         <div class="trust-label-wrap">
           <span class="trust-label-title">Free Delivery</span>
@@ -271,7 +271,7 @@
       </div>
       <div class="trust-pill">
         <div class="trust-circle">
-          <img src="Hero Icons/Best Service.png" alt="Best Service" class="trust-icon-img"/>
+          <img src="Hero%20Icons/Best%20Service.png" alt="Best Service" class="trust-icon-img"/>
         </div>
         <div class="trust-label-wrap">
           <span class="trust-label-title">Best Service</span>
@@ -280,7 +280,7 @@
       </div>
       <div class="trust-pill">
         <div class="trust-circle">
-          <img src="Hero Icons/Easy Returns.png" alt="Easy Returns" class="trust-icon-img"/>
+          <img src="Hero%20Icons/Easy%20Returns.png" alt="Easy Returns" class="trust-icon-img"/>
         </div>
         <div class="trust-label-wrap">
           <span class="trust-label-title">Easy Returns</span>
@@ -289,7 +289,7 @@
       </div>
       <div class="trust-pill">
         <div class="trust-circle">
-          <img src="Hero Icons/Proud Aussie.png" alt="Proud Aussie" class="trust-icon-img"/>
+          <img src="Hero%20Icons/Proud%20Aussie.png" alt="Proud Aussie" class="trust-icon-img"/>
         </div>
         <div class="trust-label-wrap">
           <span class="trust-label-title">Proud Aussie</span>
@@ -310,12 +310,12 @@
     </div>
     <div class="coll-grid">
       <div class="coll-card">
-        <img src="Collections/Vanities & Bathroom Cabinets.webp" alt="Vanities" class="coll-img"/>
+        <img src="Collections/Vanities%20%26%20Bathroom%20Cabinets.webp" alt="Vanities" class="coll-img"/>
         <div class="coll-content"><div class="coll-name">Vanities &amp; Bathroom Cabinets</div><div class="coll-count">180+ Products</div></div>
         <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
       </div>
       <div class="coll-card">
-        <img src="Collections/Shaving Cabinets.webp" alt="Shaving Cabinets" class="coll-img"/>
+        <img src="Collections/Shaving%20Cabinets.webp" alt="Shaving Cabinets" class="coll-img"/>
         <div class="coll-content"><div class="coll-name">Shaving Cabinets</div><div class="coll-count">65+ Products</div></div>
         <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
       </div>
@@ -330,12 +330,12 @@
         <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
       </div>
       <div class="coll-card">
-        <img src="Collections/Bathroom Basins.webp" alt="Bathroom Basins" class="coll-img"/>
+        <img src="Collections/Bathroom%20Basins.webp" alt="Bathroom Basins" class="coll-img"/>
         <div class="coll-content"><div class="coll-name">Bathroom Basins</div><div class="coll-count">140+ Products</div></div>
         <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
       </div>
       <div class="coll-card">
-        <img src="Collections/Basin Taps.webp" alt="Basin Taps" class="coll-img"/>
+        <img src="Collections/Basin%20Taps.webp" alt="Basin Taps" class="coll-img"/>
         <div class="coll-content"><div class="coll-name">Basin Taps</div><div class="coll-count">320+ Products</div></div>
         <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
       </div>
@@ -345,27 +345,27 @@
         <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
       </div>
       <div class="coll-card">
-        <img src="Collections/LED Mirrors.webp" alt="LED Mirrors" class="coll-img"/>
+        <img src="Collections/LED%20Mirrors.webp" alt="LED Mirrors" class="coll-img"/>
         <div class="coll-content"><div class="coll-name">LED Mirrors</div><div class="coll-count">60+ Products</div></div>
         <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
       </div>
       <div class="coll-card">
-        <img src="Collections/Heated Towel Rails.webp" alt="Heated Towel Rails" class="coll-img"/>
+        <img src="Collections/Heated%20Towel%20Rails.webp" alt="Heated Towel Rails" class="coll-img"/>
         <div class="coll-content"><div class="coll-name">Heated Towel Rails</div><div class="coll-count">45+ Products</div></div>
         <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
       </div>
       <div class="coll-card">
-        <img src="Collections/Kitchen Sinks.webp" alt="Kitchen Sinks" class="coll-img"/>
+        <img src="Collections/Kitchen%20Sinks.webp" alt="Kitchen Sinks" class="coll-img"/>
         <div class="coll-content"><div class="coll-name">Kitchen Sinks</div><div class="coll-count">85+ Products</div></div>
         <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
       </div>
       <div class="coll-card">
-        <img src="Collections/Sink Taps.webp" alt="Sink Taps" class="coll-img"/>
+        <img src="Collections/Sink%20Taps.webp" alt="Sink Taps" class="coll-img"/>
         <div class="coll-content"><div class="coll-name">Sink Taps</div><div class="coll-count">110+ Products</div></div>
         <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
       </div>
       <div class="coll-card">
-        <img src="Collections/Bathroom Accessories.webp" alt="Bathroom Accessories" class="coll-img"/>
+        <img src="Collections/Bathroom%20Accessories.webp" alt="Bathroom Accessories" class="coll-img"/>
         <div class="coll-content"><div class="coll-name">Bathroom Accessories</div><div class="coll-count">200+ Products</div></div>
         <div class="coll-arrow"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
       </div>
